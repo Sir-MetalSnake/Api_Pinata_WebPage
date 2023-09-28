@@ -1,7 +1,8 @@
 from fastapi import FastAPI
 
 app = FastAPI(title='My API',
-              description='')
+              description='Esta es mi API',
+              version='1.0.1')
 
 
 @app.get("/")
