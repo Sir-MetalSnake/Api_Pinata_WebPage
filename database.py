@@ -15,7 +15,8 @@ class usuario_cliente(Model):
     contraseña = CharField(max_length=100)
     correo = CharField(max_length=50)
     def __str__(self):
-        return self.idusuarios
+        return self.usuario
 
     class Meta:
         database = database
+        table_name = 'cliente'
