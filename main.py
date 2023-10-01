@@ -1,7 +1,7 @@
 from fastapi import FastAPI, HTTPException
 from database import database as connection
 from database import usuario_admin
-from Tables.usuario_cliente import usuario_cliente
+from MyTables.usuario_cliente import usuario_cliente
 from schemas.usuarioclient import UserClientRequestModel, UserClientResponseModel
 from schemas.useradmin import UserAdminRequestModel
 
