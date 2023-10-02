@@ -1,6 +1,6 @@
 from fastapi import FastAPI, HTTPException
 from database import database as connection
-from database import usuario_admin
+from MyTables.usuario_admin import usuario_admin
 from MyTables.usuario_cliente import usuario_cliente
 from schemas.usuarioclient import UserClientRequestModel, UserClientResponseModel
 from schemas.useradmin import UserAdminRequestModel
@@ -29,7 +29,7 @@ async def root():
 
 @app.post("/usuario_cliente")
 async def create_user(user_req: UserClientRequestModel):
-    user = usuario_cliente.create(
+    user_req = usuario_cliente.create(
         usuario=user_req.usuario,
         contraseña=user_req.contraseña,
         Correo=user_req.Correo
@@ -65,6 +65,18 @@ async def deleteuser(id_usuarios):
         return False
 
 
+@app.put('/usuario_cliente/{id_usuario}')
+async def Modify_User(id_usuario, usuario_request: UserClientRequestModel):
+    user = usuario_cliente.select().where(usuario_cliente.idusuarios == id_usuario).first()
+    if user:
+        for index, item in usuario_request:
+            setattr(user, index, item)
+
+        user.save()
+        return True
+    else:
+        return HTTPException(404, 'Client not found')
+
 @app.post("/usuario_admin")
 async def createadmin(useradmin_request:UserAdminRequestModel):
     user = usuario_admin.create(
@@ -81,3 +93,16 @@ async def get_useradminandpass(usuario, password):
         return True
     else:
         return False
+
+
+@app.put('/usuario_admin/{id_usuario}')
+async def Modify_UserAdmin(id_usuario, admin_request: UserAdminRequestModel):
+    user = usuario_admin.select().where(usuario_admin.idusuario_admin == id_usuario).first()
+    if user:
+        for index, item in admin_request:
+            setattr(user, index, item)
+
+        user.save()
+        return True
+    else:
+        return HTTPException(404, 'Admin not found')
