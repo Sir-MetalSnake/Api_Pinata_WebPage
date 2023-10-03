@@ -5,9 +5,16 @@ from MyTables.usuario_cliente import usuario_cliente
 from schemas.usuarioclient import UserClientRequestModel, UserClientResponseModel
 from schemas.useradmin import UserAdminRequestModel
 
+#mis bibliotecas
+
+from Functions import Function_Client as Client
+
 app = FastAPI(title='My API',
               description='Esta es mi API',
               version=' 1.0.1')
+
+#Function
+
 
 
 @app.on_event('startup')
@@ -26,15 +33,12 @@ def shutdown():
 async def root():
     return {"message": "Hello World"}
 
+#Client API
+
 
 @app.post("/usuario_cliente")
 async def create_user(user_req: UserClientRequestModel):
-    user_req = usuario_cliente.create(
-        usuario=user_req.usuario,
-        contraseña=user_req.contraseña,
-        Correo=user_req.Correo
-    )
-    return user_req
+    return await Client.create_user(user_req)
 
 
 #
