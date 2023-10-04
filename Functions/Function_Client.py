@@ -13,3 +13,11 @@ async def create_user(user_req: UserClientRequestModel):
         Correo=user_req.Correo
     )
     return user_req
+
+
+async def get_user(id_usuarios):
+    user = usuario_cliente.select().where(usuario_cliente.idusuarios == id_usuarios)
+    if user:
+        return True
+    else:
+        return False
