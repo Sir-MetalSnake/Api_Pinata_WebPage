@@ -10,6 +10,7 @@ from schemas.useradmin import UserAdminRequestModel
 
 from Functions import Function_Client as Client
 from Functions import Function_Pinatas_Type as Typep
+from Functions import Function_Admin as Admin
 
 app = FastAPI(title='My API',
               description='Esta es mi API',
@@ -85,6 +86,8 @@ async def Modify_User(id_usuario, usuario_request: UserClientRequestModel):
     else:
         return HTTPException(404, 'Client not found')
 
+
+# administrador
 
 @app.post("/usuario_admin")
 async def createadmin(useradmin_request: UserAdminRequestModel):
