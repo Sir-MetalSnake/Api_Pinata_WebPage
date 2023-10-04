@@ -2,19 +2,21 @@ from fastapi import FastAPI, HTTPException
 from database import database as connection
 from MyTables.usuario_admin import usuario_admin
 from MyTables.usuario_cliente import usuario_cliente
+from schemas.PinataType import TypeofPinataRequestModel
 from schemas.usuarioclient import UserClientRequestModel, UserClientResponseModel
 from schemas.useradmin import UserAdminRequestModel
 
-#mis bibliotecas
+# mis bibliotecas
 
 from Functions import Function_Client as Client
+from Functions import Function_Pinatas_Type as Typep
 
 app = FastAPI(title='My API',
               description='Esta es mi API',
               version=' 1.0.1')
 
-#Function
 
+# Function
 
 
 @app.on_event('startup')
@@ -33,7 +35,8 @@ def shutdown():
 async def root():
     return {"message": "Hello World"}
 
-#Client API
+
+# Client API
 
 
 @app.post("/usuario_cliente")
@@ -59,6 +62,7 @@ async def get_userandpass(usuario, password):
     else:
         return False
 
+
 @app.delete('/usuario_cliente/{id_usuarios}')
 async def deleteuser(id_usuarios):
     user = usuario_cliente.select().where(usuario_cliente.idusuarios == id_usuarios).first()
@@ -81,8 +85,9 @@ async def Modify_User(id_usuario, usuario_request: UserClientRequestModel):
     else:
         return HTTPException(404, 'Client not found')
 
+
 @app.post("/usuario_admin")
-async def createadmin(useradmin_request:UserAdminRequestModel):
+async def createadmin(useradmin_request: UserAdminRequestModel):
     user = usuario_admin.create(
         usuario=useradmin_request.usuario,
         contraseña=useradmin_request.contraseña
@@ -110,3 +115,13 @@ async def Modify_UserAdmin(id_usuario, admin_request: UserAdminRequestModel):
         return True
     else:
         return HTTPException(404, 'Admin not found')
+
+
+# type of pinata
+@app.post('/tipos_de_piñatas')
+async def create_type_pinata(TypePinata_req: TypeofPinataRequestModel):
+    return await Typep.create_type_pinatas(TypePinata_req)
+
+@app.get('/tipos_de_piñatas/{id_type}')
+async def get_typepinata(id_type):
+    return await Typep.get_typepinata(id_type)
