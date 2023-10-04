@@ -122,6 +122,17 @@ async def Modify_UserAdmin(id_usuario, admin_request: UserAdminRequestModel):
 async def create_type_pinata(TypePinata_req: TypeofPinataRequestModel):
     return await Typep.create_type_pinatas(TypePinata_req)
 
+
 @app.get('/tipos_de_piñatas/{id_type}')
 async def get_typepinata(id_type):
     return await Typep.get_typepinata(id_type)
+
+
+@app.get('/tipos_de_piñatas')
+async def get_all_TypeP():
+    return await Typep.get_alltypepinata()
+
+
+@app.delete('/tipos_de_piñatas/{id_type}')
+async def delete_the_type_pinata(id_type):
+    return await Typep.delete_the_type_pinata(id_type)
