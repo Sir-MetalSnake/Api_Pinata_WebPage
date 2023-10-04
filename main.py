@@ -91,33 +91,15 @@ async def Modify_User(id_usuario, usuario_request: UserClientRequestModel):
 
 @app.post("/usuario_admin")
 async def createadmin(useradmin_request: UserAdminRequestModel):
-    user = usuario_admin.create(
-        usuario=useradmin_request.usuario,
-        contraseña=useradmin_request.contraseña
-    )
-    return useradmin_request
+    return await Admin.createadmin(useradmin_request)
 
 
 @app.get('/usuario_admin/{usuario}/{password}')
 async def get_useradminandpass(usuario, password):
-    user = usuario_admin.select().where(usuario_admin.usuario == usuario and usuario_admin.contraseña == password)
-    if user:
-        return True
-    else:
-        return False
+    return await Admin.get_useradminandpass(usuario, password)
 
 
 @app.put('/usuario_admin/{id_usuario}')
-async def Modify_UserAdmin(id_usuario, admin_request: UserAdminRequestModel):
-    user = usuario_admin.select().where(usuario_admin.idusuario_admin == id_usuario).first()
-    if user:
-        for index, item in admin_request:
-            setattr(user, index, item)
-
-        user.save()
-        return True
-    else:
-        return HTTPException(404, 'Admin not found')
 
 
 # type of pinata
