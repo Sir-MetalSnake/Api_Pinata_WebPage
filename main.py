@@ -48,11 +48,7 @@ async def create_user(user_req: UserClientRequestModel):
 #
 @app.get('/usuario_cliente/{id_usuarios}')
 async def get_user(id_usuarios):
-    user = usuario_cliente.select().where(usuario_cliente.idusuarios == id_usuarios)
-    if user:
-        return True
-    else:
-        return False
+    return await Client.get_user(id_usuarios)
 
 
 @app.get('/usuario_cliente/{usuario}/{password}')
