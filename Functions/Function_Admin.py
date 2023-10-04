@@ -1,6 +1,6 @@
 from MyTables.usuario_admin import usuario_admin
 from schemas.useradmin import UserAdminRequestModel
-
+from fastapi import HTTPException # REQUEST EXCEPTION
 
 async def createadmin(useradmin_request: UserAdminRequestModel):
     useradmin_request = usuario_admin.create(

@@ -100,7 +100,8 @@ async def get_useradminandpass(usuario, password):
 
 
 @app.put('/usuario_admin/{id_usuario}')
-
+async def Modify_UserAdmin(id_usuario, admin_request: UserAdminRequestModel):
+    return await Admin.Modify_UserAdmin(id_usuario,admin_request)
 
 # type of pinata
 @app.post('/tipos_de_piñatas')
