@@ -39,13 +39,6 @@ async def root():
 
 # Client API
 
-
-@app.post("/usuario_cliente")
-async def create_user(user_req: UserClientRequestModel):
-    return await Client.create_user(user_req)
-
-
-#
 @app.get('/usuario_cliente/{id_usuarios}')
 async def get_user(id_usuarios):
     return await Client.get_user(id_usuarios)
@@ -53,34 +46,22 @@ async def get_user(id_usuarios):
 
 @app.get('/usuario_cliente/{usuario}/{password}')
 async def get_userandpass(usuario, password):
-    user = usuario_cliente.select().where(usuario_cliente.usuario == usuario and usuario_cliente.contraseña == password)
-    if user:
-        return True
-    else:
-        return False
+    return await Client.get_userandpass(usuario, password)
 
 
-@app.delete('/usuario_cliente/{id_usuarios}')
-async def deleteuser(id_usuarios):
-    user = usuario_cliente.select().where(usuario_cliente.idusuarios == id_usuarios).first()
-    if user:
-        user.delete_instance()
-        return True
-    else:
-        return False
+@app.post("/usuario_cliente")
+async def create_user(user_req: UserClientRequestModel):
+    return await Client.create_user(user_req)
 
 
 @app.put('/usuario_cliente/{id_usuario}')
 async def Modify_User(id_usuario, usuario_request: UserClientRequestModel):
-    user = usuario_cliente.select().where(usuario_cliente.idusuarios == id_usuario).first()
-    if user:
-        for index, item in usuario_request:
-            setattr(user, index, item)
+    return Client.Modify_User(id_usuario, usuario_request)
 
-        user.save()
-        return True
-    else:
-        return HTTPException(404, 'Client not found')
+
+@app.delete('/usuario_cliente/{id_usuarios}')
+async def deleteuser(id_usuarios):
+    return await Client.deleteuser(id_usuarios)
 
 
 # administrador
@@ -97,7 +78,8 @@ async def get_useradminandpass(usuario, password):
 
 @app.put('/usuario_admin/{id_usuario}')
 async def Modify_UserAdmin(id_usuario, admin_request: UserAdminRequestModel):
-    return await Admin.Modify_UserAdmin(id_usuario,admin_request)
+    return await Admin.Modify_UserAdmin(id_usuario, admin_request)
+
 
 # type of pinata
 @app.post('/tipos_de_piñatas')
@@ -118,3 +100,6 @@ async def get_all_TypeP():
 @app.delete('/tipos_de_piñatas/{id_type}')
 async def delete_the_type_pinata(id_type):
     return await Typep.delete_the_type_pinata(id_type)
+
+# Festividades
+
