@@ -27,4 +27,4 @@ async def Modify_UserAdmin(id_usuario, admin_request: UserAdminRequestModel):
         user.save()
         return True
     else:
-        return HTTPException(404, 'Admin not found')
+        raise HTTPException(404, 'Admin not found')
