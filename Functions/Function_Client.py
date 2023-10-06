@@ -1,5 +1,5 @@
 from MyTables.usuario_cliente import usuario_cliente
-from schemas.usuarioclient import UserClientRequestModel
+from schemas.usuarioclient import UserClientRequestModel,UserClient_Modify_Pass
 
 from fastapi import HTTPException # REQUEST EXCEPTION
 
@@ -7,12 +7,16 @@ from fastapi import HTTPException # REQUEST EXCEPTION
 
 
 async def create_user(user_req: UserClientRequestModel):
-    user_req = usuario_cliente.create(
-        usuario=user_req.usuario,
-        contraseña=user_req.contraseña,
-        Correo=user_req.Correo
-    )
-    return user_req
+    res = usuario_cliente.select().where(usuario_cliente.usuario == user_req.usuario)
+    if res:
+        return HTTPException(404,'This User is already exist')
+    else:
+        user_req = usuario_cliente.create(
+            usuario=user_req.usuario,
+            contraseña=user_req.contraseña,
+            Correo=user_req.Correo
+        )
+        return user_req
 
 
 async def get_user(id_usuarios):
@@ -48,5 +52,15 @@ async def Modify_User(id_usuario, usuario_request: UserClientRequestModel):
 
         user.save()
         return True
+    else:
+        return HTTPException(404, 'Client not found')
+
+
+async def Modify_Password(usuario, usuario_req: UserClient_Modify_Pass):
+    res = usuario_cliente.get_or_none(usuario_cliente.usuario == usuario)
+    if res:
+        res.contraseña = usuario_req.contraseña
+        res.save()
+        return {"message": f"La Contraseña a sido actualizada"}
     else:
         return HTTPException(404, 'Client not found')

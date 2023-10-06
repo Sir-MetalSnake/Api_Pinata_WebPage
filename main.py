@@ -3,7 +3,8 @@ from database import database as connection
 from MyTables.usuario_admin import usuario_admin
 from MyTables.usuario_cliente import usuario_cliente
 from schemas.PinataType import TypeofPinataRequestModel
-from schemas.usuarioclient import UserClientRequestModel, UserClientResponseModel
+from schemas.usuarioclient import (UserClientRequestModel, UserClient_Modify_Pass,
+                                   UserClientResponseModel)
 from schemas.useradmin import UserAdminRequestModel
 
 # mis bibliotecas
@@ -57,6 +58,11 @@ async def create_user(user_req: UserClientRequestModel):
 @app.put('/usuario_cliente/{id_usuario}')
 async def Modify_User(id_usuario, usuario_request: UserClientRequestModel):
     return Client.Modify_User(id_usuario, usuario_request)
+
+
+@app.patch('/usuario_cliente/{usuario}')
+async def Modify_Password(usuario, usuario_req: UserClient_Modify_Pass):
+    return await Client.Modify_Password(usuario, usuario_req)
 
 
 @app.delete('/usuario_cliente/{id_usuarios}')
