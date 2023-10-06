@@ -1,5 +1,5 @@
 from MyTables.usuario_admin import usuario_admin
-from schemas.useradmin import UserAdminRequestModel
+from schemas.useradmin import UserAdminRequestModel,Modify_Admin_Password
 from fastapi import HTTPException # REQUEST EXCEPTION
 
 async def createadmin(useradmin_request: UserAdminRequestModel):
@@ -28,3 +28,12 @@ async def Modify_UserAdmin(id_usuario, admin_request: UserAdminRequestModel):
         return True
     else:
         raise HTTPException(404, 'Admin not found')
+
+async def Modify_Password_Admin(usuario, newPass: Modify_Admin_Password):
+    res = usuario_admin.get_or_none(usuario_admin.usuario == usuario)
+    if res:
+        res.contraseña=newPass.contraseña
+        res.save()
+        return {"message": f"La Contraseña a sido actualizada"}
+    else:
+        return HTTPException(404, 'Admin not found')

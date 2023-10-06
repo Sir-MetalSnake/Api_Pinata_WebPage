@@ -5,7 +5,7 @@ from MyTables.usuario_cliente import usuario_cliente
 from schemas.PinataType import TypeofPinataRequestModel
 from schemas.usuarioclient import (UserClientRequestModel, UserClient_Modify_Pass,
                                    UserClientResponseModel)
-from schemas.useradmin import UserAdminRequestModel
+from schemas.useradmin import UserAdminRequestModel,Modify_Admin_Password
 
 # mis bibliotecas
 
@@ -85,6 +85,11 @@ async def get_useradminandpass(usuario, password):
 @app.put('/usuario_admin/{id_usuario}')
 async def Modify_UserAdmin(id_usuario, admin_request: UserAdminRequestModel):
     return await Admin.Modify_UserAdmin(id_usuario, admin_request)
+
+
+@app.patch('/usuario_admin/{usuario}')
+async def Modify_Password_Admin(usuario, newPass: Modify_Admin_Password):
+    return await Admin.Modify_Password_Admin(usuario, newPass)
 
 
 # type of pinata
