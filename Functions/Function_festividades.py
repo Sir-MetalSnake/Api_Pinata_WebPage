@@ -7,7 +7,7 @@ import json
 async def create_Festivity(Festivity_req: FestividadBaseModel):
     res = festividades.select().where(festividades.idFestividades == Festivity_req.idFestividades)
     if res:
-        return HTTPException(404, 'Ya hay un objeto con esa llave')
+        raise HTTPException(404, 'Ya hay un objeto con esa llave')
     else:
         Festivity_req = festividades.create(
             idFestividades=Festivity_req.idFestividades,

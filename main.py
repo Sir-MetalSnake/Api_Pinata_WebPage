@@ -14,6 +14,7 @@ from Functions import Function_Client as Client
 from Functions import Function_Pinatas_Type as Typep
 from Functions import Function_Admin as Admin
 from Functions import Function_festividades as Fest
+from Functions import Function_Contacto as Conct
 
 app = FastAPI(title='My API',
               description='Esta es mi API',
@@ -41,7 +42,6 @@ async def root():
 
 
 # Client API
-
 @app.get('/usuario_cliente/{id_usuarios}', tags=["Usuario"])
 async def get_user(id_usuarios):
     return await Client.get_user(id_usuarios)
@@ -134,3 +134,8 @@ async def get_allFestivity():
 @app.delete('/festividades/{id_Festivity}', tags=["festividades"])
 async def delete_Festivity(id_Festivity):
     return await Fest.delete_Festivity(id_Festivity)
+
+#contacto
+@app.get('/Contacto/{id_Contact}', tags=["Contacto"])
+async def get_Contact(id_Contact):
+    return await Conct.get_Contact(id_Contact)
