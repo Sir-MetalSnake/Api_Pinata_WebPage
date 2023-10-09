@@ -153,3 +153,5 @@ async def Modify_Contacto(id_Contact, req: ContactEditBase):
 @app.delete('/Contacto/{id_Contact}', tags=["Contacto"])
 async def Delete_Contacto(id_Contact):
     return await Conct.Delete_Contacto(id_Contact)
+
+#piñata
