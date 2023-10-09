@@ -19,7 +19,7 @@ async def create_Contact(Req: ContactBaseModel):
         raise HTTPException(404, 'Ya hay un objeto con esa llave')
     else:
         Req = Contacto.create(
-            idFestividades=Req.idContacto,
+            idContacto=Req.idContacto,
             Direccion=Req.Direccion,
             Telefono=Req.Telefono
         )
