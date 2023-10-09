@@ -140,7 +140,7 @@ async def get_Contact(id_Contact):
     return await Conct.get_Contact(id_Contact)
 
 
-@app.post('/Contacto',tags=["Contacto"])
+@app.post('/Contacto', tags=["Contacto"])
 async def create_Contact(Req: ContactBaseModel):
     return await Conct.create_Contact(Req)
 
@@ -150,6 +150,6 @@ async def Modify_Contacto(id_Contact, req: ContactEditBase):
     return await Conct.Modify_Contacto(id_Contact,req)
 
 
-@app.delete('/Contacto/{id_Contact}',tags=["Contacto"])
+@app.delete('/Contacto/{id_Contact}', tags=["Contacto"])
 async def Delete_Contacto(id_Contact):
     return await Conct.Delete_Contacto(id_Contact)
