@@ -24,3 +24,23 @@ async def create_Contact(Req: ContactBaseModel):
             Telefono=Req.Telefono
         )
         return Req
+
+
+async def Modify_Contacto(id_Contact, req: ContactEditBase):
+    res = Contacto.get_or_none(Contacto.idContacto == id_Contact)
+    if res:
+        res.Direccion = req.Direccion
+        res.Telefono = req.Telefono
+        res.save()
+        return {"message": f"Los datos han sido actualizados"}
+    else:
+        raise HTTPException(404, 'No se ha encontrado el dato')
+
+
+async def Delete_Contacto(id_Contact):
+    Con = Contacto.select().where(Contacto.idContacto == id_Contact).first()
+    if Con:
+        Con.delete_instance()
+        return {"message": f"El dato ya fue eliminado con exito"}
+    else:
+        return HTTPException(404, 'No se ha encontrado el dato')

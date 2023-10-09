@@ -1,12 +1,10 @@
 from fastapi import FastAPI, HTTPException
 from database import database as connection
-from MyTables.usuario_admin import usuario_admin
-from MyTables.usuario_cliente import usuario_cliente
+from schemas.Contact import *
 from schemas.PinataType import TypeofPinataRequestModel
 from schemas.fetividad import *
-from schemas.usuarioclient import (UserClientRequestModel, UserClient_Modify_Pass,
-                                   UserClientResponseModel)
-from schemas.useradmin import UserAdminRequestModel,Modify_Admin_Password
+from schemas.usuarioclient import *
+from schemas.useradmin import *
 
 # mis bibliotecas
 
@@ -135,7 +133,23 @@ async def get_allFestivity():
 async def delete_Festivity(id_Festivity):
     return await Fest.delete_Festivity(id_Festivity)
 
+
 #contacto
 @app.get('/Contacto/{id_Contact}', tags=["Contacto"])
 async def get_Contact(id_Contact):
     return await Conct.get_Contact(id_Contact)
+
+
+@app.post('/Contacto',tags=["Contacto"])
+async def create_Contact(Req: ContactBaseModel):
+    return await Conct.create_Contact(Req)
+
+
+@app.patch('/Contacto/{id_Contact}', tags=["Contacto"])
+async def Modify_Contacto(id_Contact, req: ContactEditBase):
+    return await Conct.Modify_Contacto(id_Contact,req)
+
+
+@app.delete('/Contacto/{id_Contact}',tags=["Contacto"])
+async def Delete_Contacto(id_Contact):
+    return await Conct.Delete_Contacto(id_Contact)

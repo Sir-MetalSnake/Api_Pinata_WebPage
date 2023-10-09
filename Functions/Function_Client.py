@@ -63,4 +63,4 @@ async def Modify_Password(usuario, usuario_req: UserClient_Modify_Pass):
         res.save()
         return {"message": f"La Contraseña a sido actualizada"}
     else:
-        return HTTPException(404, 'Client not found')
+        raise HTTPException(404, 'Client not found')
