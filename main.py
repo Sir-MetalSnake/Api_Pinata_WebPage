@@ -3,6 +3,7 @@ from database import database as connection
 from schemas.Contact import *
 from schemas.PinataType import TypeofPinataRequestModel
 from schemas.fetividad import *
+from schemas.pinata import *
 from schemas.usuarioclient import *
 from schemas.useradmin import *
 
@@ -13,6 +14,7 @@ from Functions import Function_Pinatas_Type as Typep
 from Functions import Function_Admin as Admin
 from Functions import Function_festividades as Fest
 from Functions import Function_Contacto as Conct
+from Functions import Function_Pinata as Pinata
 
 app = FastAPI(title='My API',
               description='Esta es mi API',
@@ -155,3 +157,23 @@ async def Delete_Contacto(id_Contact):
     return await Conct.Delete_Contacto(id_Contact)
 
 #piñata
+
+
+@app.get('/piñata', tags=["Piñata"])
+async def GetAll_Pinata():
+    return await Pinata.GetAll_Pinata()
+
+
+@app.patch('/piñata/{ID_Pinata}', tags=["Piñata"])
+async def Modify_Piñata(ID_Pinata,Req:ModifyPinata):
+    return await Pinata.Modify_Piñata(ID_Pinata,Req)
+
+
+@app.post('/piñata', tags=["Piñata"])
+async def Create_Pinata(Req:PinataBASEMODEL):
+    return await Pinata.Create_Pinata(Req)
+
+
+@app.delete('/piñata/{ID_Pinata}', tags=["Piñata"])
+async def Delete_Pinata(ID_Pinata):
+    return await Pinata.Delete_Pinata(ID_Pinata)
