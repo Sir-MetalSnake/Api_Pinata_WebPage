@@ -1,12 +1,14 @@
 from fastapi import FastAPI, HTTPException
 from database import database as connection
+
+#My Schemas of my Data Base
 from schemas.Contact import *
 from schemas.PinataType import TypeofPinataRequestModel
 from schemas.fetividad import *
 from schemas.pinata import *
 from schemas.usuarioclient import *
 from schemas.useradmin import *
-
+from schemas.Pinta_detail import *
 # mis bibliotecas
 
 from Functions import Function_Client as Client
@@ -15,7 +17,7 @@ from Functions import Function_Admin as Admin
 from Functions import Function_festividades as Fest
 from Functions import Function_Contacto as Conct
 from Functions import Function_Pinata as Pinata
-
+from Functions import Function_Pinata_detail as detail
 app = FastAPI(title='My API',
               description='Esta es mi API',
               version=' 1.0.1')
@@ -177,3 +179,21 @@ async def Create_Pinata(Req:PinataBASEMODEL):
 @app.delete('/piñata/{ID_Pinata}', tags=["Piñata"])
 async def Delete_Pinata(ID_Pinata):
     return await Pinata.Delete_Pinata(ID_Pinata)
+
+#Pinata Details
+
+@app.get('/Piñata_detalles/{ID_Pinata}', tags=["Piñata_detalles"])
+async def Get_PinataDetail(ID_Pinata):
+    return await detail.Get_Pinata_detail(ID_Pinata)
+
+@app.post('/Piñata_detalles', tags=["Piñata_detalles"])
+async def Create_PinataDetail(Req:Pinata_detailBASEMODEL):
+    return await detail.Create_PinataDetail(Req)
+
+@app.delete('/Piñata_detalles/{ID_Pinata}', tags=["Piñata_detalles"])
+async def Delete_PinataDetail(ID_Pinata):
+    return await detail.Delete_PinataDetail(ID_Pinata)
+
+@app.patch('/Piñata_detalles', tags=["Piñata_detalles"])
+async def Modify_Piñata_detail(ID_Pinata,Req:ModifyPinata_detail):
+    return await detail.Modify_Piñata_detail(ID_Pinata,Req)
