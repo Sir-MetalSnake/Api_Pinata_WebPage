@@ -1,4 +1,4 @@
-from MyTables.Piñatas_detalles import *
+from MyTables.Piñatas_detalles import piñatas_detalles
 from schemas.Pinta_detail import *
 from fastapi import HTTPException
 import json
@@ -26,7 +26,7 @@ async def GetAll_Pinata_detail():
 
 
 async def Get_Pinata_detail(ID_Pinata):
-    res = piñatas_detalles.select().where(piñatas_detalles.Piñata_idPiñatas == ID_Pinata)
+    res = piñatas_detalles.select().where(piñatas_detalles.Piñata_idPiñatas == ID_Pinata).first()
     if res:
         return MyID_DetailResponse(idPiñatas_detalles=res.idPiñatas_detalles,
                                    Tamaño=res.Tamaño,

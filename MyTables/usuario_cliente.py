@@ -4,7 +4,6 @@ class usuario_cliente(Model):
     usuario = CharField(max_length=45)
     contraseña = CharField(max_length=45)
     Correo = CharField(max_length=45)
-
     def __str__(self):
         return self.usuario
 

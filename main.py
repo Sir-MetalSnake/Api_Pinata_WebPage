@@ -3,7 +3,8 @@ from database import database as connection
 
 #My Schemas of my Data Base
 from schemas.Contact import *
-from schemas.PinataType import TypeofPinataRequestModel
+from schemas.Inventary import *
+from schemas.PinataType import *
 from schemas.fetividad import *
 from schemas.pinata import *
 from schemas.usuarioclient import *
@@ -18,6 +19,7 @@ from Functions import Function_festividades as Fest
 from Functions import Function_Contacto as Conct
 from Functions import Function_Pinata as Pinata
 from Functions import Function_Pinata_detail as detail
+from Functions import Function_Inventario as Invent
 app = FastAPI(title='My API',
               description='Esta es mi API',
               version=' 1.0.1')
@@ -182,18 +184,42 @@ async def Delete_Pinata(ID_Pinata):
 
 #Pinata Details
 
-@app.get('/Piñata_detalles/{ID_Pinata}', tags=["Piñata_detalles"])
+
+@app.get('/piñatas_detalles/{ID_Pinata}', tags=["Piñata_detalles"])
 async def Get_PinataDetail(ID_Pinata):
     return await detail.Get_Pinata_detail(ID_Pinata)
 
-@app.post('/Piñata_detalles', tags=["Piñata_detalles"])
+
+@app.post('/piñatas_detalles', tags=["Piñata_detalles"])
 async def Create_PinataDetail(Req:Pinata_detailBASEMODEL):
     return await detail.Create_PinataDetail(Req)
 
-@app.delete('/Piñata_detalles/{ID_Pinata}', tags=["Piñata_detalles"])
+
+@app.delete('/piñatas_detalles/{ID_Pinata}', tags=["Piñata_detalles"])
 async def Delete_PinataDetail(ID_Pinata):
     return await detail.Delete_PinataDetail(ID_Pinata)
 
-@app.patch('/Piñata_detalles', tags=["Piñata_detalles"])
+@app.patch('/piñatas_detalles', tags=["Piñata_detalles"])
 async def Modify_Piñata_detail(ID_Pinata,Req:ModifyPinata_detail):
-    return await detail.Modify_Piñata_detail(ID_Pinata,Req)
+    return await detail.Modify_Piñata_detail(ID_Pinata, Req)
+
+#Inventario
+
+
+@app.get('/inventario', tags=["Inventario"])
+async def GetAll_Inventory():
+    return await Invent.GetAllInventory()
+
+
+@app.post('/inventario', tags=["Inventario"])
+async def Create_Invent(Req: InventaryBaseModel):
+    return await Invent.CreateInvent(Req)
+
+
+@app.delete('/inventario/{ID_Inventory}', tags=["Inventario"])
+async def Delete_Inventory(ID_Inventory):
+    return await Invent.Delete_Inventory(ID_Inventory)
+
+@app.patch('/inventario/{ID_Inventory}', tags=["Inventario"])
+async def Modify_Inventory(ID_Inventory,Req:InventaryDataModel):
+    return await Invent.Modify_Inventory(ID_Inventory, Req)
