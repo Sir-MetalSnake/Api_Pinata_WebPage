@@ -12,25 +12,17 @@ class InfoClientRequestModel(BaseModel):
     Nombre: str
     Apellido_P: str
     Apellido_M: str
-    telefono: str
+    Telefono: str
     usuario_cliente_idusuarios: int
 
 
-class InfoClientRequestModel_Get(BaseModel):
-    id_info_cliente: int
-    Nombre: str
-    Apellido_P: str
-    Apellido_M: str
-    telefono: int
-    usuario_cliente_idusuarios: int
 
-
-class InfoClienteResponse(InfoClientRequestModel_Get):
+class InfoClienteResponse(InfoClientRequestModel):
     id_info_cliente: int
 
 
 class InfoClient_Modify_Tel(BaseModel):
-    telefono: str
+    Telefono: str
 
 
 class InfoClienteResponse(InfoClientRequestModel):
