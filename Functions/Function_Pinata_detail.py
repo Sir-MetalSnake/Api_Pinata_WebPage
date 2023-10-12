@@ -35,7 +35,7 @@ async def Get_Pinata_detail(ID_Pinata):
                                    Stock=res.Stock,
                                    Piñata_idPiñatas=res.Piñata_idPiñatas)
     else:
-        raise HTTPException(404,"No se ha encontrado el dato")
+        raise HTTPException(404, "No se ha encontrado el dato")
 
 
 async def Modify_Piñata_detail(ID_Pinata,Req:ModifyPinata_detail):

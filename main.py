@@ -10,6 +10,7 @@ from schemas.pinata import *
 from schemas.usuarioclient import *
 from schemas.useradmin import *
 from schemas.Pinta_detail import *
+from schemas.Pedido_Schema import *
 # mis bibliotecas
 
 from Functions import Function_Client as Client
@@ -20,6 +21,7 @@ from Functions import Function_Contacto as Conct
 from Functions import Function_Pinata as Pinata
 from Functions import Function_Pinata_detail as detail
 from Functions import Function_Inventario as Invent
+from Functions import Function_Pedido as Pedid
 app = FastAPI(title='My API',
               description='Esta es mi API',
               version=' 1.0.1')
@@ -223,3 +225,9 @@ async def Delete_Inventory(ID_Inventory):
 @app.patch('/inventario/{ID_Inventory}', tags=["Inventario"])
 async def Modify_Inventory(ID_Inventory,Req:InventaryDataModel):
     return await Invent.Modify_Inventory(ID_Inventory, Req)
+
+
+# Pedido
+@app.post('/pedido')
+async def Create_Pedido(Req:PedidoBaseModel):
+    return await Pedid.Create_Pedido(Req)
