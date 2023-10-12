@@ -2,14 +2,16 @@ from MyTables.Info_cliente import Info_cliente
 from schemas.Infocliente import *
 from fastapi import HTTPException # REQUEST EXCEPTION
 
+
 async def get_Info_cliente(id_usuario):
-    Inflo_cliente = Info_cliente.select().where(Info_cliente.usuario_cliente_idusuarios == id_usuario)
-    if Inflo_cliente:
-        return InfoClienteResponse(Nombre=Inflo_cliente.Nombre,
-                                   Apellido_P=Inflo_cliente.Apellido_P,
-                                   Apellido_M=Inflo_cliente.Apellido_M,
-                                   Telefono=Inflo_cliente.Telefono,
-                                   usuario_cliente_idusuarios=Inflo_cliente.usuario_cliente_idusuarios)
+    Info = Info_cliente.select().where(Info_cliente.usuario_cliente_idusuarios == id_usuario)
+    if Info:
+        return InfoClienteResponse(id_info_cliente=Info.id_info_cliente,
+                                   Nombre=Info.Nombre,
+                                   Apellido_P=Info.Apellido_P,
+                                   Apellido_M=Info.Apellido_M,
+                                   Telefono=Info.Telefono,
+                                   usuario_cliente_idusuarios=Info.usuario_cliente_idusuarios)
     else:
         raise HTTPException(404, "No se ha encontrado el dato")
 
