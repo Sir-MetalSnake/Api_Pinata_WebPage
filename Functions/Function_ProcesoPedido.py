@@ -14,14 +14,14 @@ async def get_Proceso_Del_Pedido(ID):
 
 
 
-    async def Create_Procedo_Del_Pedido(Req: ProcesoPedidoRequestModel):
-        res = ProcesoPedido.select().where(ProcesoPedido.ID == ID)
-        if res:
-            raise HTTPException(404, 'Ya hay un objeto con esa clave')
-        else:
-            Req = ProcesoPedido.create(
-                pedido_idpedido=Req.pedido_idpedido,
-                Anticipo = Req.Anticipo,
-                Pago_Final = Req.Pago_Final
-            )
-            return  Req
+async def Create_Procedo_Del_Pedido(Req: ProcesoPedidoRequestModel):
+    res = ProcesoPedido.select().where(ProcesoPedido.ID == Req.pedido_idpedido)
+    if res:
+        raise HTTPException(404,  'Ya hay un objeto con esa clave')
+    else:
+        Req = ProcesoPedido.create(
+            pedido_idpedido=Req.pedido_idpedido,
+            Anticipo = Req.Anticipo,
+            Pago_Final = Req.Pago_Final
+        )
+        return Req
