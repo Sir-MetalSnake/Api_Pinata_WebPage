@@ -25,5 +25,4 @@ class InfoClient_Modify_Tel(BaseModel):
     Telefono: str
 
 
-class InfoClienteResponse(InfoClientRequestModel):
-    id_info_cliente:int
+

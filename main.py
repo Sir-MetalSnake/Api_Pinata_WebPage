@@ -6,6 +6,7 @@ from schemas.Contact import *
 from schemas.Infocliente import InfoClientRequestModel
 from schemas.Inventary import *
 from schemas.PinataType import *
+from schemas.ProcesoDelPedido import *
 from schemas.fetividad import *
 from schemas.pinata import *
 from schemas.usuarioclient import *
@@ -24,6 +25,7 @@ from Functions import Function_Pinata_detail as detail
 from Functions import Function_Inventario as Invent
 from Functions import Function_Pedido as Pedid
 from Functions import  Function_Info_Cliente as Client_Inf
+from Functions import Function_ProcesoPedido as procesoP
 app = FastAPI(title='My API',
               description='Esta es mi API',
               version=' 1.0.1')
@@ -259,3 +261,11 @@ async def Create_Info_User(Req: InfoClientRequestModel):
 @app.delete('/Info_Cliente/{id_usuario}', tags=["Info_Cliente"])
 async def Delete_Info_User(ID_Info):
     return await Client_Inf.Delete_Info_User(ID_Info)
+
+@app.post('/proceso_del_pedido', tags=["Proceso_Del_Pedido"])
+async def Create_Procedo_Del_Pedido(Req: ProcesoPedidoRequestModel):
+    return await procesoP.Create_Procedo_Del_Pedido(Req)
+
+@app.get('/proceso_del_pedido/{ID}', tags=["Proceso_Del_Pedido"])
+async def get_Proceso_Del_Pedido(ID):
+    return await procesoP.get_Proceso_Del_Pedido(ID)
