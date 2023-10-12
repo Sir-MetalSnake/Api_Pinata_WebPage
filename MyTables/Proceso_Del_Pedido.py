@@ -1,11 +1,14 @@
 from database import *
 
-class ProcesoPedido(Model):
+class proceso_del_pedido(Model):
     ID = IntegerField(primary_key=True)
-    pedido_idpedido = IntegerField
+    pedido_idpedido = IntegerField(primary_key=False)
     Anticipo = CharField(max_length=45)
     Pago_Final = CharField(max_length=45)
 
+    def __int__(self):
+        return self.ID
+
     class Meta:
         database = database
-        table_name = 'poceso_del_pedido'
+        table_name = 'proceso_del_pedido'

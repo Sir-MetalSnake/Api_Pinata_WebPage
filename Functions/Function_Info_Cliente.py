@@ -4,14 +4,15 @@ from fastapi import HTTPException # REQUEST EXCEPTION
 
 
 async def get_Info_cliente(id_usuario):
-    Info = Info_cliente.select().where(Info_cliente.usuario_cliente_idusuarios == id_usuario)
+    Info = Info_cliente.select().where(Info_cliente.usuario_cliente_idusuarios == id_usuario).first()
     if Info:
-        return InfoClienteResponse(id_info_cliente=Info.id_info_cliente,
+        print(InfoClienteResponse(id_info_cliente=Info.id_info_cliente,
                                    Nombre=Info.Nombre,
                                    Apellido_P=Info.Apellido_P,
                                    Apellido_M=Info.Apellido_M,
                                    Telefono=Info.Telefono,
-                                   usuario_cliente_idusuarios=Info.usuario_cliente_idusuarios)
+                                   usuario_cliente_idusuarios=Info.usuario_cliente_idusuarios))
+        return True
     else:
         raise HTTPException(404, "No se ha encontrado el dato")
 
