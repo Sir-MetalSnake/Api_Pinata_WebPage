@@ -255,3 +255,7 @@ async def get_Info_cliente(id_usuario):
 @app.post('/Info_Cliente/', tags=["Info_Cliente"])
 async def Create_Info_User(Req: InfoClientRequestModel):
     return await Client_Inf.Create_Info_User(Req)
+
+@app.delete('/Info_Cliente/{id_usuario}', tags=["Info_Cliente"])
+async def Delete_Info_User(ID_Info):
+    return await Client_Inf.Delete_Info_User(ID_Info)

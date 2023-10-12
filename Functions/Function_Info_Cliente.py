@@ -25,13 +25,13 @@ async def Modify_User(id_info_cliente, usuario_request: InfoClient_Modify_Tel):
         raise HTTPException(404, 'Client not found')
 
 
+
 async def Create_Info_User(Req: InfoClientRequestModel):
-    res = Info_cliente.select().where(Info_cliente.id_info_cliente == Req.id_info_cliente)
+    res = Info_cliente.select().where(Info_cliente.usuario_cliente_idusuarios == Req.usuario_cliente_idusuarios)
     if res:
         raise HTTPException(404, 'Ya hay un objeto con esa clave')
     else:
         Req = Info_cliente.create(
-            id_info_cliente=Req.id_info_cliente,
             Nombre=Req.Nombre,
             Apellido_P=Req.Apellido_P,
             Apellido_M=Req.Apellido_M,
@@ -39,3 +39,11 @@ async def Create_Info_User(Req: InfoClientRequestModel):
             usuario_cliente_idusuarios=Req.usuario_cliente_idusuarios
         )
         return Req
+
+async def Delete_Info_User(ID_Info):
+    res = Info_cliente.select().where(Info_cliente.id_info_cliente == ID_Info)
+    if res:
+        res.delete_instance()
+        return True
+    else:
+        raise HTTPException(404,"El dato que desea eliminar no existe")
