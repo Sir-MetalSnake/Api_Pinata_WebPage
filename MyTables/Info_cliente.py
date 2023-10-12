@@ -6,6 +6,7 @@ class Info_cliente(Model):
     Apellido_P = CharField(max_length=45)
     Apellido_M = CharField(max_length=45)
     Telefono = CharField(max_length=45)
+    usuario_cliente_idusuarios = IntegerField(ForeignKeyField(usuario_cliente, field= "idusuarios", column_name='usuario_cliente_idusuarios'))
     def __str__(self):
         return self.Nombre
 
