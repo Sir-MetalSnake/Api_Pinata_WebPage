@@ -1,5 +1,4 @@
-from database import *
-
+from MyTables.usuario_cliente import usuario_cliente
 from database import *
 class Info_cliente(Model):
     id_info_cliente = IntegerField(primary_key=True)

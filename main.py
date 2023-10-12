@@ -3,6 +3,7 @@ from database import database as connection
 
 #My Schemas of my Data Base
 from schemas.Contact import *
+from schemas.Infocliente import InfoClientRequestModel
 from schemas.Inventary import *
 from schemas.PinataType import *
 from schemas.fetividad import *
@@ -22,6 +23,7 @@ from Functions import Function_Pinata as Pinata
 from Functions import Function_Pinata_detail as detail
 from Functions import Function_Inventario as Invent
 from Functions import Function_Pedido as Pedid
+from Functions import  Function_Info_Cliente as Client_Inf
 app = FastAPI(title='My API',
               description='Esta es mi API',
               version=' 1.0.1')
@@ -228,6 +230,28 @@ async def Modify_Inventory(ID_Inventory,Req:InventaryDataModel):
 
 
 # Pedido
-@app.post('/pedido')
+@app.post('/pedido', tags=["Pedido"])
 async def Create_Pedido(Req:PedidoBaseModel):
     return await Pedid.Create_Pedido(Req)
+
+@app.get('/pedido/{ID_Pedido}', tags=["Pedido"])
+async def get_Pedidos_user(ID_usuario):
+    return await Pedid.get_Pedidos_user(ID_usuario)
+
+@app.get('/pedido', tags=["Pedido"])
+async def get_Pedidos():
+    return await Pedid.get_Pedidos()
+
+@app.delete('/pedido/{ID_Pedido}/{ID_usuario}', tags=["Pedido"])
+async def Delete_Pedido(ID_Pedido,ID_usuario):
+    return await Pedid.Delete_Pedido(ID_Pedido,ID_usuario)
+
+#Info Cliente
+
+@app.get('/Info_Cliente/{id_usuario}', tags=["Info_Cliente"])
+async def get_Info_cliente(id_usuario):
+    return await Client_Inf.get_Info_cliente(id_usuario)
+
+@app.post('/Info_Cliente/', tags=["Info_Cliente"])
+async def Create_Info_User(Req: InfoClientRequestModel):
+    return await Client_Inf.Create_Info_User(Req)
