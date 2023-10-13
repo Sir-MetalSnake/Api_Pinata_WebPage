@@ -27,6 +27,7 @@ from Functions import Function_Inventario as Invent
 from Functions import Function_Pedido as Pedid
 from Functions import  Function_Info_Cliente as Client_Inf
 from Functions import Function_ProcesoPedido as procesoP
+from Functions import Function_favorite as favoriteU
 app = FastAPI(title='My API',
               description='Esta es mi API',
               version=' 1.0.1')
@@ -274,3 +275,14 @@ async def Create_Procedo_Del_Pedido(Req: ProcesoPedidoRequestModel):
 @app.get('/proceso_del_pedido/{ID}', tags=["Proceso_Del_Pedido"])
 async def get_Proceso_Del_Pedido(ID):
     return await procesoP.get_Proceso_Del_Pedido(ID)
+
+@app.get('/favoritos/{id_usuario}', tags=["favoritos"])
+async def GetFavoritos(Id_usuario):
+    return await favoriteU.GetFavoritos(Id_usuario)
+@app.post('/favoritos', tags=["favoritos"])
+async def CreateFavoritos(Req: FavoriteBaseModel):
+    return await favoriteU.CreateFavoritos(Req)
+
+@app.delete('/favoritos/{id_usuario}/{id_favorito}', tags=["favoritos"])
+async def Delete_Favoritos(id_usuario,id_favorito):
+    return await favoriteU.Delete_Favoritos(id_usuario,id_favorito)
