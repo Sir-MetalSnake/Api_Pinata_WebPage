@@ -3,7 +3,7 @@ from database import database as connection
 
 #My Schemas of my Data Base
 from schemas.Contact import *
-from schemas.Infocliente import InfoClientRequestModel
+from schemas.Infocliente import *
 from schemas.Inventary import *
 from schemas.PinataType import *
 from schemas.ProcesoDelPedido import *
@@ -261,6 +261,10 @@ async def Create_Info_User(Req: InfoClientRequestModel):
 @app.delete('/Info_Cliente/{id_usuario}', tags=["Info_Cliente"])
 async def Delete_Info_User(ID_Info):
     return await Client_Inf.Delete_Info_User(ID_Info)
+
+@app.patch('/Info_Cliente/{id_usuario}', tags=["Info_Cliente"])
+async def Modify_User(ID_Usuario, usuario_request: InfoClient_Modify_Tel):
+    return await Client_Inf.Modify_User(ID_Usuario, usuario_request)
 
 @app.post('/proceso_del_pedido', tags=["Proceso_Del_Pedido"])
 async def Create_Procedo_Del_Pedido(Req: ProcesoPedidoRequestModel):
