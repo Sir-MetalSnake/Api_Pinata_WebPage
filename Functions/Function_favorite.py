@@ -34,14 +34,8 @@ async def GetFavoritos(Id_usuario):
 
 
 
-
-
-
-
-
-async def Delete_Favoritos(id_usuario):
-    res = favoritos.select().where(favoritos.id_Favorito == id_usuario)
-
+async def Delete_Favoritos(id_usuario, id_favorito):
+    res = favoritos.select().where(favoritos.id_user == id_usuario and favoritos.id_Favorito == id_favorito).first()
     if res:
         res.delete_instance()
         return True

@@ -6,4 +6,4 @@ class FavoriteBaseModel(BaseModel):
     id_user: int
 
 class FavoriteModelResponse(FavoriteBaseModel):
-    id_user: int
+    id_Favorito: int
