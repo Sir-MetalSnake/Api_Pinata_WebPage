@@ -3,6 +3,7 @@ from database import database as connection
 
 #My Schemas of my Data Base
 from schemas.Contact import *
+from schemas.Favorite import *
 from schemas.Infocliente import *
 from schemas.Inventary import *
 from schemas.PinataType import *
