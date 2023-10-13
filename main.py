@@ -246,7 +246,7 @@ async def get_Pedidos():
 
 @app.delete('/pedido/{ID_Pedido}/{ID_usuario}', tags=["Pedido"])
 async def Delete_Pedido(ID_Pedido,ID_usuario):
-    return await Pedid.Delete_Pedido(ID_Pedido,ID_usuario)
+    return await Pedid.Delete_Pedido(ID_Pedido, ID_usuario)
 
 #Info Cliente
 
