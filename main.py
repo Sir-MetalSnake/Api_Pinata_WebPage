@@ -294,6 +294,5 @@ async def Delete_Favoritos(id_usuario,id_favorito):
 
 
 #Agregar etiquetas de colores, personajes(filtros)
-
 #agregar tabla de ships (id_chip, id_pinata)
 #tabla (id_color,nombre_color, id_pinata)
