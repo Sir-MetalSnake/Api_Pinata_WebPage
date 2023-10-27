@@ -1,9 +1,37 @@
 from MyTables.usuario_cliente import usuario_cliente
 from schemas.usuarioclient import UserClientRequestModel,UserClient_Modify_Pass
-
+import jwt
 from fastapi import HTTPException # REQUEST EXCEPTION
-
+import logging
+from datetime import *
+logging.basicConfig(level=logging.DEBUG)
 #Class Client
+SECRET_KEY = "OPTIMISTAPRIME"
+ALGORITHM = "HS512"
+ACCESS_TOKEN_EXPIRE_MINUTES = 2
+
+
+async def login_user(request_login):
+    user = request_login.username
+    password = request_login.password
+    token = await authenticate_user(user, password)
+    return {'access_token': token, 'token_type': 'bearer'}
+
+
+async def authenticate_user(user: str, password: str):
+    Usuario = usuario_cliente.get_or_none(usuario_cliente.usuario == user)
+
+    if Usuario is None or not usuario_cliente.contraseña == password:
+        raise HTTPException(status_code=404, detail='Worker not found or incorrect password')
+
+    access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+    access_token_data = {
+        "sub": Usuario.usuario,
+        "exp": datetime.utcnow() + access_token_expires,
+    }
+    access_token = jwt.encode(access_token_data, SECRET_KEY, algorithm=ALGORITHM)
+
+    return access_token
 
 
 async def create_user(user_req: UserClientRequestModel):

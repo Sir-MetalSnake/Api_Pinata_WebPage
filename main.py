@@ -1,5 +1,7 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Depends
 from database import database as connection
+#Security
+from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 
 #My Schemas of my Data Base
 from schemas.Contact import *
@@ -22,18 +24,16 @@ from Functions import Function_Admin as Admin
 from Functions import Function_festividades as Fest
 from Functions import Function_Contacto as Conct
 from Functions import Function_Pinata as Pinata
-from Functions import Function_Pinata_detail as detail
+from Functions import Function_Pinata_detail as Detail
 from Functions import Function_Inventario as Invent
 from Functions import Function_Pedido as Pedid
 from Functions import  Function_Info_Cliente as Client_Inf
 from Functions import Function_ProcesoPedido as procesoP
 from Functions import Function_favorite as favoriteU
+
 app = FastAPI(title='My API',
               description='Esta es mi API',
               version=' 1.0.1')
-
-
-# Function
 
 
 @app.on_event('startup')
@@ -52,8 +52,21 @@ def shutdown():
 async def root():
     return {"message": "Hello World"}
 
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="Loginprueba")
 
+
+@app.post('/Loginprueba', tags=['Usuario'])
+async def login(request_login: OAuth2PasswordRequestForm = Depends()):
+    return await Client.login_user(request_login)
+# Function
+
+
+@app.get('/hol', tags=['Usuario'])
+async def hol(request_login: str = Depends(oauth2_scheme)):
+    return "hola funciona"
 # Client API
+
+
 @app.get('/usuario_cliente/{id_usuarios}', tags=["Usuario"])
 async def get_user(id_usuarios):
     return await Client.get_user(id_usuarios)
@@ -104,7 +117,6 @@ async def Modify_UserAdmin(id_usuario, admin_request: UserAdminRequestModel):
 @app.patch('/usuario_admin/{usuario}', tags=["Admin"])
 async def Modify_Password_Admin(usuario, newPass: Modify_Admin_Password):
     return await Admin.Modify_Password_Admin(usuario, newPass)
-
 
 # type of pinata
 @app.post('/tipos_de_piñatas', tags=["type of pinata"])
@@ -200,21 +212,21 @@ async def Delete_Pinata(ID_Pinata):
 
 @app.get('/piñatas_detalles/{ID_Pinata}', tags=["Piñata_detalles"])
 async def Get_PinataDetail(ID_Pinata):
-    return await detail.Get_Pinata_detail(ID_Pinata)
+    return await Detail.Get_Pinata_detail(ID_Pinata)
 
 
 @app.post('/piñatas_detalles', tags=["Piñata_detalles"])
 async def Create_PinataDetail(Req:Pinata_detailBASEMODEL):
-    return await detail.Create_PinataDetail(Req)
+    return await Detail.Create_PinataDetail(Req)
 
 
 @app.delete('/piñatas_detalles/{ID_Pinata}', tags=["Piñata_detalles"])
 async def Delete_PinataDetail(ID_Pinata):
-    return await detail.Delete_PinataDetail(ID_Pinata)
+    return await Detail.Delete_PinataDetail(ID_Pinata)
 
 @app.patch('/piñatas_detalles', tags=["Piñata_detalles"])
 async def Modify_Piñata_detail(ID_Pinata,Req:ModifyPinata_detail):
-    return await detail.Modify_Piñata_detail(ID_Pinata, Req)
+    return await Detail.Modify_Piñata_detail(ID_Pinata, Req)
 
 #Inventario
 
