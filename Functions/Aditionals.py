@@ -54,8 +54,9 @@ async def Send_Mail_Code_Verify(user):
 async def Compare_Secret_Key(Key):
     loki = datetime.utcnow()
     cypher = hashlib.sha512(Key.encode()).hexdigest()
-    valhalla = secret_key.select().where(secret_key.KeyName == cypher and loki <= secret_key.Expire)
+    valhalla = secret_key.select().where(secret_key.KeyName == cypher and loki <= secret_key.Fecha_de_exp)
     if valhalla:
         return True
     else:
+        secret_key.delete().where(loki <= secret_key.Fecha_de_exp)
         raise HTTPException(404, 'El código no coincide o Ya Expiro')
