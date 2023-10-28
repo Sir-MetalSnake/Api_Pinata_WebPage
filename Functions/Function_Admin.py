@@ -25,7 +25,7 @@ async def Modify_UserAdmin(id_usuario, admin_request: UserAdminRequestModel):
             setattr(user, index, item)
 
         user.save()
-        return True
+        return {"message": f"Se ha modificado la información con exito"}
     else:
         raise HTTPException(404, 'Admin not found')
 

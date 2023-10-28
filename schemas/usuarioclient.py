@@ -3,12 +3,12 @@ from typing import Optional
 
 # request model
 class UserClientRequestModel(BaseModel):
-    usuario: str
-    Correo: str
-    contraseña: str
+    usuario: Optional[str] = None
+    Correo: Optional[str] = None
+    contraseña: Optional[str] = None
 
 class UserClient_Modify_Pass(BaseModel):
-    contraseña:str
+    contraseña: str
 
 class UserClientResponseModel(UserClientRequestModel):
     idusuarios: int

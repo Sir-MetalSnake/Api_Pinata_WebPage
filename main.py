@@ -84,7 +84,7 @@ async def create_user(user_req: UserClientRequestModel):
 
 @app.put('/usuario_cliente/{id_usuario}', tags=["Usuario"])
 async def Modify_User(id_usuario, usuario_request: UserClientRequestModel):
-    return Client.Modify_User(id_usuario, usuario_request)
+    return await Client.Modify_User(id_usuario, usuario_request)
 
 
 @app.patch('/usuario_cliente/{usuario}', tags=["Usuario"])

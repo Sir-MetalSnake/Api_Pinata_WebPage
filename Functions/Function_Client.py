@@ -73,13 +73,13 @@ async def deleteuser(id_usuarios):
 
 
 async def Modify_User(id_usuario, usuario_request: UserClientRequestModel):
-    user = usuario_cliente.select().where(usuario_cliente.idusuarios == id_usuario).first()
+    user = usuario_cliente.get_or_none(usuario_cliente.idusuarios == id_usuario)
     if user:
-        for index, item in usuario_request:
-            setattr(user, index, item)
-
+        user.usuario = usuario_request.usuario if usuario_request.usuario is not None else user.usuario
+        user.contraseña = usuario_request.contraseña if usuario_request.contraseña is not None else user.contraseña
+        user.Correo = usuario_request.Correo if usuario_request.Correo is not None else user.Correo
         user.save()
-        return True
+        return {"message": f"Se ha modificado la información con exito"}
     else:
         return HTTPException(404, 'Client not found')
 
