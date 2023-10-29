@@ -17,6 +17,7 @@ from schemas.usuarioclient import *
 from schemas.useradmin import *
 from schemas.Pinta_detail import *
 from schemas.Pedido_Schema import *
+from schemas.Colors_model import *
 # mis bibliotecas
 
 from Functions import Function_Client as Client
@@ -33,6 +34,7 @@ from Functions import Function_ProcesoPedido as procesoP
 from Functions import Function_favorite as favoriteU
 from Functions import Aditionals as Add
 from Functions import Function_Chips as Tag
+from Functions import Function_Colors as Col
 
 app = FastAPI(title='My API',
               description='Esta es mi API',
@@ -331,6 +333,26 @@ async def Delete_Tag(idTag):
 @app.put('/Modify_Tag', tags=['Etiqueta'])
 async def Modify_Tag(idTag, tag_req: Model_Chip):
     return await Tag.Modify_Tag(idTag, tag_req)
+
+
+@app.get('/Get_color_pinata', tags=['Colors'])
+async def Get_All_Color(id_pinata):
+    return await Col.Get_All_Color(id_pinata)
+
+
+@app.post('/Add_color_pinata', tags=['Colors'])
+async def Create_Color(Color_Req:Colors_Main_Model):
+    return await Col.Create_Color(Color_Req)
+
+
+@app.put('/Modify_color_Pinata', tags=['Colors'])
+async def Modify_Color(idColor, color_req: Colors_Main_Model):
+    return await Col.Modify_Color(idColor,color_req)
+
+
+@app.delete('/Delete_color_Pinata', tags=['Colors'])
+async def Delete_Color(idColor):
+    return await Col.Delete_Color(idColor)
 #Agregar etiquetas de colores, personajes(filtros)
 #agregar tabla de ships (id_chip, id_pinata)
 #tabla (id_color,nombre_color, id_pinata)
