@@ -30,6 +30,7 @@ from Functions import Function_Pedido as Pedid
 from Functions import  Function_Info_Cliente as Client_Inf
 from Functions import Function_ProcesoPedido as procesoP
 from Functions import Function_favorite as favoriteU
+from Functions import Aditionals as Add
 
 app = FastAPI(title='My API',
               description='Esta es mi API',
@@ -65,6 +66,15 @@ async def login(request_login: OAuth2PasswordRequestForm = Depends()):
 async def hol(request_login: str = Depends(oauth2_scheme)):
     return "hola funciona"
 # Client API
+
+
+@app.post('/Send_Mail', tags=["Usuario"])
+async def Send_Mail_Code_Verify(user):
+    return await Add.Send_Mail_Code_Verify(user)
+
+@app.post('/Comprobar', tags=["Usuario"])
+async def Compare_Secret_Key(Key):
+    return await Add.Compare_Secret_Key(Key)
 
 
 @app.get('/usuario_cliente/{id_usuarios}', tags=["Usuario"])

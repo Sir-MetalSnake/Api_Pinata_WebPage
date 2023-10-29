@@ -5,11 +5,10 @@ import random
 import hashlib
 import string
 from fastapi import HTTPException
+from MyTables.secret_key import *
 
 char = (string.digits + string.
         ascii_letters + string.punctuation)
-
-from MyTables.secret_key import *
 
 
 class Sender:
@@ -35,28 +34,27 @@ class Sender:
 
 
 async def Send_Mail_Code_Verify(user):
-    cli = usuario_cliente.select().where(usuario_cliente.usuario == user)
+    cli = usuario_cliente.get_or_none(usuario_cliente.usuario == user)
     sender = Sender("ansirkhziur@gmail.com", "diyv behc uqqm tydq")  # en esta parte llamamos a la clase Sender
     # Se crea de forma automatica el codigo para conectarse
     p1 = ''.join(random.choice(char) for i in range(3))
     p2 = ''.join(random.choice(char) for i in range(3))
     p3 = ''.join(random.choice(char) for i in range(3))
     code = p1 + '-' + p2 + '-' + p3  # o63-948-eu3
-    sender.Send_Mail(subject="Cambio de Contraseña", receiver=cli.Correo, file="res/Recovery_pass.html",
-                     code=code)  # Hacemos llamado a la funcion
+    sender.Send_Mail(subject="Cambio de Contraseña", receiver=cli.Correo, file="Mail_Corp/Recovery_pass.html", code=code)
+    # Hacemos llamado a la funcion
     h1 = hashlib.sha512(code.encode()).hexdigest()
     t = datetime.utcnow() + timedelta(minutes=3)
     print(t)
-    secret_key.create(Key_name=h1, Id_usuario=cli.idusuarios, Expire=t)
+    secret_key.create(Key_name=h1, Id_usuario=cli.idusuarios, Fecha_de_exp=t)
     return "Email Send Sucessfully"
 
 
 async def Compare_Secret_Key(Key):
     loki = datetime.utcnow()
     cypher = hashlib.sha512(Key.encode()).hexdigest()
-    valhalla = secret_key.select().where(secret_key.KeyName == cypher and loki <= secret_key.Fecha_de_exp)
+    valhalla = secret_key.select().where(secret_key.Key_name == cypher and loki <= secret_key.Fecha_de_exp)
     if valhalla:
         return True
     else:
-        secret_key.delete().where(loki <= secret_key.Fecha_de_exp)
         raise HTTPException(404, 'El código no coincide o Ya Expiro')
