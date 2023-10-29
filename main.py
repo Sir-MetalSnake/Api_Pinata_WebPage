@@ -10,6 +10,7 @@ from schemas.Infocliente import *
 from schemas.Inventary import *
 from schemas.PinataType import *
 from schemas.ProcesoDelPedido import *
+from schemas.Tags_Chips import *
 from schemas.fetividad import *
 from schemas.pinata import *
 from schemas.usuarioclient import *
@@ -31,6 +32,7 @@ from Functions import  Function_Info_Cliente as Client_Inf
 from Functions import Function_ProcesoPedido as procesoP
 from Functions import Function_favorite as favoriteU
 from Functions import Aditionals as Add
+from Functions import Function_Chips as Tag
 
 app = FastAPI(title='My API',
               description='Esta es mi API',
@@ -314,7 +316,21 @@ async def CreateFavoritos(Req: FavoriteBaseModel):
 async def Delete_Favoritos(id_usuario,id_favorito):
     return await favoriteU.Delete_Favoritos(id_usuario,id_favorito)
 
+@app.get('/Get_All_Chips',tags=['Etiqueta'])
+async def Get_All_Tags():
+    return await Tag.Get_All_Tags()
 
+@app.post('/Add_Tag',tags=['Etiqueta'])
+async def Create_Tag(TagReq:Model_Chip):
+    return await Tag.Create_Tag(TagReq)
+
+@app.delete('/Delete_tag',tags=['Etiqueta'])
+async def Delete_Tag(idTag):
+    return await Tag.Delete_Tag(idTag)
+
+@app.put('/Modify_Tag', tags=['Etiqueta'])
+async def Modify_Tag(idTag, tag_req: Model_Chip):
+    return await Tag.Modify_Tag(idTag, tag_req)
 #Agregar etiquetas de colores, personajes(filtros)
 #agregar tabla de ships (id_chip, id_pinata)
 #tabla (id_color,nombre_color, id_pinata)
