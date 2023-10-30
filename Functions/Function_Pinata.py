@@ -16,7 +16,7 @@ async def GetAll_Pinata():
                                Precio=index.Precio,
                                Imagen=index.Imagen)
             model = {'idPiñatas': pinat.idPiñatas, 'Nombre_pinata': pinat.Nombre_pinata,'idTipos_de_piñatas': pinat.idTipos_de_piñatas,'idFestividades': pinat.idFestividades,
-                     'Precio': pinat.Precio,'Imagen': pinat.Imagen}
+                     'Precio': pinat.Precio, 'Imagen': pinat.Imagen}
             resul.append(model)
         json_resul = json.dumps({'piñata': resul})
         data = json.loads(json_resul)
@@ -76,8 +76,9 @@ async def Create_Pinata(Req:PinataBASEMODEL):
 
 
 async def Delete_Pinata(ID_Pinata):
-    res = piñata.select().where(piñata.idPiñatas == ID_Pinata)
+    res = piñata.select().where(piñata.idPiñatas == ID_Pinata).first()
     if res:
         res.delete_instance()
+        return {"message": f"El dato se elimino con éxito"}
     else:
         raise HTTPException(404,"El dato que desea eliminar no existe")

@@ -71,8 +71,9 @@ async def Create_Pedido(Req:PedidoBaseModel):
 
 
 async def Delete_Pedido(ID_Pedido,ID_usuario):
-    res = pedido.select().where(pedido.idpedido == ID_Pedido and pedido.usuario_cliente_idusuarios == ID_usuario)
+    res = pedido.select().where(pedido.idpedido == ID_Pedido and pedido.usuario_cliente_idusuarios == ID_usuario).first()
     if res:
         res.delete_instance()
+        return {"message": f"El dato se elimino con éxito"}
     else:
         raise HTTPException(404,"El dato que desea eliminar no existe")

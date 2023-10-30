@@ -43,9 +43,10 @@ async def GetAllInventory():
 
 
 async def Delete_Inventory(ID_Inventory):
-    res = inventario.select().where(inventario.idPiñatas == ID_Inventory)
+    res = inventario.select().where(inventario.idInventario == ID_Inventory).first()
     if res:
         res.delete_instance()
+        return {"message": f"Se elimino el dato con éxito"}
     else:
         raise HTTPException(404,"El dato que desea eliminar no existe")
 
