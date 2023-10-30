@@ -11,7 +11,6 @@ async def GetAll_Pinata_detail():
         for index in pin:
             pinat = MyID_DetailResponse(idPiñatas_detalles=index.idPiñatas_detalles,
                                Tamaño=index.Tamaño,
-                               Colores=index.Colores,
                                Tiempo_estimado=index.Tiempo_estimado,
                                Stock=index.Stock,
                                Piñata_idPiñatas=index.Piñata_idPiñatas)
@@ -30,7 +29,6 @@ async def Get_Pinata_detail(ID_Pinata):
     if res:
         return MyID_DetailResponse(idPiñatas_detalles=res.idPiñatas_detalles,
                                    Tamaño=res.Tamaño,
-                                   Colores=res.Colores,
                                    Tiempo_estimado=res.Tiempo_estimado,
                                    Stock=res.Stock,
                                    Piñata_idPiñatas=res.Piñata_idPiñatas)
@@ -42,7 +40,6 @@ async def Modify_Piñata_detail(ID_Pinata,Req:ModifyPinata_detail):
     xor = piñatas_detalles.get_or_none(piñatas_detalles.idPiñatas_detalles == ID_Pinata)
     if xor:
         xor.Tamaño = Req.Tamaño
-        xor.Colores = Req.Colores
         xor.Tiempo_estimado = Req.Tiempo_estimado
         xor.Stock = Req.Stock
         xor.Piñata_idPiñatas = Req.Piñata_idPiñatas
@@ -60,7 +57,6 @@ async def Create_PinataDetail(Req:Pinata_detailBASEMODEL):
         Req = piñatas_detalles.create(
             idPiñatas_detalles=Req.idPiñatas_detalles,
             Tamaño=Req.Tamaño,
-            Colores=Req.Colores,
             Tiempo_estimado=Req.Tiempo_estimado,
             Stock=Req.Stock,
             Piñata_idPiñatas=Req.Piñata_idPiñatas

@@ -4,7 +4,6 @@ from MyTables.piñata import *
 class piñatas_detalles(Model):
     idPiñatas_detalles = IntegerField(primary_key=True)
     Tamaño = CharField(max_length=45)
-    Colores = CharField(max_length=100)
     Tiempo_estimado = CharField(max_length=45)
     Stock = IntegerField(primary_key=False)
     Piñata_idPiñatas = IntegerField(ForeignKeyField(piñata, field= "idPiñatas", backref='piñatas_detalles', column_name='Piñata_idPiñatas'))

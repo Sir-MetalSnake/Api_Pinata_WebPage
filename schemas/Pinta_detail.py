@@ -4,7 +4,6 @@ from pydantic import BaseModel
 class Pinata_detailBASEMODEL(BaseModel):
     idPiñatas_detalles: int
     Tamaño: str
-    Colores: str
     Tiempo_estimado: str
     Stock: int
     Piñata_idPiñatas: int
@@ -12,7 +11,6 @@ class Pinata_detailBASEMODEL(BaseModel):
 
 class ModifyPinata_detail(BaseModel):
     Tamaño: str
-    Colores: str
     Tiempo_estimado: str
     Stock: int
     Piñata_idPiñatas: int
