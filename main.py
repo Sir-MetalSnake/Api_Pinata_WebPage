@@ -29,7 +29,7 @@ from Functions import Function_Pinata as Pinata
 from Functions import Function_Pinata_detail as Detail
 from Functions import Function_Inventario as Invent
 from Functions import Function_Pedido as Pedid
-from Functions import  Function_Info_Cliente as Client_Inf
+from Functions import Function_Info_Cliente as Client_Inf
 from Functions import Function_ProcesoPedido as procesoP
 from Functions import Function_favorite as favoriteU
 from Functions import Aditionals as Add
