@@ -1,12 +1,12 @@
 from fastapi import FastAPI, HTTPException, Depends
 from database import database as connection
+from fastapi.middleware.cors import CORSMiddleware
 #Security
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 
 #My Schemas of my Data Base
 from schemas.Contact import *
 from schemas.Favorite import *
-from schemas.Infocliente import *
 from schemas.Inventary import *
 from schemas.PinataType import *
 from schemas.ProcesoDelPedido import *
@@ -29,7 +29,6 @@ from Functions import Function_Pinata as Pinata
 from Functions import Function_Pinata_detail as Detail
 from Functions import Function_Inventario as Invent
 from Functions import Function_Pedido as Pedid
-from Functions import Function_Info_Cliente as Client_Inf
 from Functions import Function_ProcesoPedido as procesoP
 from Functions import Function_favorite as favoriteU
 from Functions import Aditionals as Add
@@ -56,13 +55,24 @@ def shutdown():
 @app.get("/")
 async def root():
     return {"message": "Hello World"}
+app.add_middleware(CORSMiddleware,
+                    allow_origins=["*"],
+                    allow_credentials=True,
+                    allow_methods=["*"],
+                    allow_headers=["*"],
+                    )
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="Loginprueba")
+
 
 
 @app.post('/Loginprueba', tags=['Usuario'])
 async def login(request_login: OAuth2PasswordRequestForm = Depends()):
     return await Client.login_user(request_login)
+
+@app.get('/user/me', tags=['Usuario'])
+async def get_current_user(token: str = Depends(oauth2_scheme)):
+    return await Client.get_current_user(token)
 # Function
 
 
@@ -104,6 +114,10 @@ async def Modify_User(id_usuario, usuario_request: UserClientRequestModel):
 @app.patch('/usuario_cliente/{usuario}', tags=["Usuario"])
 async def Modify_Password(usuario, usuario_req: UserClient_Modify_Pass):
     return await Client.Modify_Password(usuario, usuario_req)
+
+@app.patch('/Modificar_telefono/{usuario}', tags=["Usuario"])
+async def Modify_Tel(usuario, usuario_req: UserClient_Modify_Pass):
+    return await Client.Modify_Tel(usuario, usuario_req)
 
 
 @app.delete('/usuario_cliente/{id_usuarios}', tags=["Usuario"])
@@ -281,23 +295,7 @@ async def get_Pedidos():
 async def Delete_Pedido(ID_Pedido,ID_usuario):
     return await Pedid.Delete_Pedido(ID_Pedido, ID_usuario)
 
-#Info Cliente
-
-@app.get('/Info_Cliente/{id_usuario}', tags=["Info_Cliente"])
-async def get_Info_cliente(id_usuario):
-    return await Client_Inf.get_Info_cliente(id_usuario)
-
-@app.post('/Info_Cliente/', tags=["Info_Cliente"])
-async def Create_Info_User(Req: InfoClientRequestModel):
-    return await Client_Inf.Create_Info_User(Req)
-
-@app.delete('/Info_Cliente/{id_usuario}', tags=["Info_Cliente"])
-async def Delete_Info_User(ID_Info):
-    return await Client_Inf.Delete_Info_User(ID_Info)
-
-@app.patch('/Info_Cliente/{id_usuario}', tags=["Info_Cliente"])
-async def Modify_User(ID_Usuario, usuario_request: InfoClient_Modify_Tel):
-    return await Client_Inf.Modify_User(ID_Usuario, usuario_request)
+#Proceso del pedido
 
 @app.post('/proceso_del_pedido', tags=["Proceso_Del_Pedido"])
 async def Create_Procedo_Del_Pedido(Req: ProcesoPedidoRequestModel):

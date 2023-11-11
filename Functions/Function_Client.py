@@ -1,7 +1,8 @@
 from MyTables.usuario_cliente import usuario_cliente
-from schemas.usuarioclient import UserClientRequestModel,UserClient_Modify_Pass
+from schemas.usuarioclient import *
 import jwt
-from fastapi import HTTPException # REQUEST EXCEPTION
+from jwt import PyJWTError
+from fastapi import HTTPException,Depends # REQUEST EXCEPTION
 import logging
 from datetime import *
 logging.basicConfig(level=logging.DEBUG)
@@ -32,7 +33,14 @@ async def authenticate_user(user: str, password: str):
     access_token = jwt.encode(access_token_data, SECRET_KEY, algorithm=ALGORITHM)
 
     return access_token
-
+async def get_current_user(token):
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        username: str = payload.get("sub")
+        user = usuario_cliente.get(usuario_cliente.usuario == username)
+    except PyJWTError:
+        raise HTTPException(status_code=401, detail="No autorizado")
+    return user
 
 async def create_user(user_req: UserClientRequestModel):
     res = usuario_cliente.select().where(usuario_cliente.usuario == user_req.usuario)
@@ -42,7 +50,11 @@ async def create_user(user_req: UserClientRequestModel):
         user_req = usuario_cliente.create(
             usuario=user_req.usuario,
             contraseña=user_req.contraseña,
-            Correo=user_req.Correo
+            Correo=user_req.Correo,
+            Nombre=user_req.Nombre,
+            Apellido_P=user_req.Apellido_P,
+            Apellido_M=user_req.Apellido_M,
+            Telefono=user_req.Telefono
         )
         return user_req
 
@@ -78,6 +90,10 @@ async def Modify_User(id_usuario, usuario_request: UserClientRequestModel):
         user.usuario = usuario_request.usuario if usuario_request.usuario is not None else user.usuario
         user.contraseña = usuario_request.contraseña if usuario_request.contraseña is not None else user.contraseña
         user.Correo = usuario_request.Correo if usuario_request.Correo is not None else user.Correo
+        user.Nombre = usuario_request.Nombre if usuario_request.Nombre is not None else user.Nombre
+        user.Apellido_P = usuario_request.Apellido_P if usuario_request.Apellido_P is not None else user.Apellido_P
+        user.Apellido_M = usuario_request.Apellido_M if usuario_request.Apellido_M is not None else user.Apellido_M
+        user.Telefono = usuario_request.Telefono if usuario_request.Telefono is not None else user.Telefono
         user.save()
         return {"message": f"Se ha modificado la información con exito"}
     else:
@@ -90,5 +106,14 @@ async def Modify_Password(usuario, usuario_req: UserClient_Modify_Pass):
         res.contraseña = usuario_req.contraseña
         res.save()
         return {"message": f"La Contraseña a sido actualizada"}
+    else:
+        raise HTTPException(404, 'Client not found')
+
+async def Modify_Tel(usuario, usuario_request: UserClient_Modify_Tel):
+    res = usuario_cliente.get_or_none(usuario_cliente.usuario == usuario)
+    if res:
+        res.Telefono = usuario_request.Telefono
+        res.save()
+        return {"message": f"El telefono a sido actualizado"}
     else:
         raise HTTPException(404, 'Client not found')
