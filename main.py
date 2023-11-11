@@ -126,6 +126,16 @@ async def deleteuser(id_usuarios):
 
 
 # administrador
+oauth2_scheme2 = OAuth2PasswordBearer(tokenUrl="LoginAdmin")
+@app.post('/LoginAdmin', tags=['Admin'])#Logeo con el admin
+async def loginAdmin(request_login: OAuth2PasswordRequestForm = Depends()):
+    return await Admin.login_userAdmin(request_login)
+
+
+@app.get('/userAdmin/me', tags=['Admin'])
+async def get_current_user(token: str = Depends(oauth2_scheme2)):
+    return await Admin.get_current_userAdmin(token)
+
 
 @app.post("/usuario_admin", tags=["Admin"])
 async def createadmin(useradmin_request: UserAdminRequestModel):

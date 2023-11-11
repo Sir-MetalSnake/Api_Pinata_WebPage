@@ -1,6 +1,47 @@
 from MyTables.usuario_admin import usuario_admin
 from schemas.useradmin import UserAdminRequestModel,Modify_Admin_Password
 from fastapi import HTTPException # REQUEST EXCEPTION
+import jwt
+from jwt import PyJWTError
+from fastapi import HTTPException,Depends # REQUEST EXCEPTION
+import logging
+from datetime import *
+logging.basicConfig(level=logging.DEBUG)
+#Class Admin
+SECRET_KEY = "OPTIMISTAPRIME"
+ALGORITHM = "HS512"
+ACCESS_TOKEN_EXPIRE_MINUTES = 2
+
+#Auth User Admin
+async def login_userAdmin(request_login):
+    user = request_login.username
+    password = request_login.password
+    token = await authenticate_userAdmin(user, password)
+    return {'access_token': token, 'token_type': 'bearer'}
+
+async def authenticate_userAdmin(user: str, password: str):
+    Usuario = usuario_admin.get_or_none(usuario_admin.usuario == user)
+
+    if Usuario is None or not usuario_admin.contraseña == password:
+        raise HTTPException(status_code=404, detail='Admin not found or incorrect password')
+
+    access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+    access_token_data = {
+        "sub": Usuario.usuario,
+        "exp": datetime.utcnow() + access_token_expires,
+    }
+    access_token = jwt.encode(access_token_data, SECRET_KEY, algorithm=ALGORITHM)
+
+    return access_token
+async def get_current_userAdmin(token):
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        username: str = payload.get("sub")
+        user = usuario_admin.get(usuario_admin.usuario == username)
+    except PyJWTError:
+        raise HTTPException(status_code=401, detail="No autorizado")
+    return user
+
 
 async def createadmin(useradmin_request: UserAdminRequestModel):
     useradmin_request = usuario_admin.create(
