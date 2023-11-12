@@ -62,22 +62,34 @@ app.add_middleware(CORSMiddleware,
                     allow_headers=["*"],
                     )
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="Loginprueba")
+oauth2_scheme_user = OAuth2PasswordBearer(tokenUrl="Loginprueba",scheme_name="oauth2_User")
+oauth2_scheme_Admin = OAuth2PasswordBearer(tokenUrl="LoginAdmin",scheme_name="oauth2_Admin")
 
-
-
+#auth
 @app.post('/Loginprueba', tags=['Usuario'])
 async def login(request_login: OAuth2PasswordRequestForm = Depends()):
     return await Client.login_user(request_login)
 
 @app.get('/user/me', tags=['Usuario'])
-async def get_current_user(token: str = Depends(oauth2_scheme)):
+async def get_current_user(token: str = Depends(oauth2_scheme_user)):
     return await Client.get_current_user(token)
+
+@app.post('/LoginAdmin', tags=['Admin'])#Logeo con el admin
+async def loginAdmin(request_login2: OAuth2PasswordRequestForm = Depends()):
+    return await Admin.login_userAdmin(request_login2)
+
+
+@app.get('/userAdmin/me', tags=['Admin'])
+async def get_current_user(token2: str = Depends(oauth2_scheme_Admin)):
+    return await Admin.get_current_userAdmin(token2)
+
+
+
 # Function
 
 
 @app.get('/hol', tags=['Usuario'])
-async def hol(request_login: str = Depends(oauth2_scheme)):
+async def hol(request_login: str = Depends(oauth2_scheme_user)):
     return "hola funciona"
 # Client API
 
@@ -126,15 +138,7 @@ async def deleteuser(id_usuarios):
 
 
 # administrador
-oauth2_scheme2 = OAuth2PasswordBearer(tokenUrl="LoginAdmin")
-@app.post('/LoginAdmin', tags=['Admin'])#Logeo con el admin
-async def loginAdmin(request_login: OAuth2PasswordRequestForm = Depends()):
-    return await Admin.login_userAdmin(request_login)
 
-
-@app.get('/userAdmin/me', tags=['Admin'])
-async def get_current_user(token: str = Depends(oauth2_scheme2)):
-    return await Admin.get_current_userAdmin(token)
 
 
 @app.post("/usuario_admin", tags=["Admin"])
