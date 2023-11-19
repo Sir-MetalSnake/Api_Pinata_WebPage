@@ -3,7 +3,7 @@ from schemas.useradmin import UserAdminRequestModel,Modify_Admin_Password
 from fastapi import HTTPException # REQUEST EXCEPTION
 import jwt
 from jwt import PyJWTError
-from fastapi import HTTPException,Depends # REQUEST EXCEPTION
+from fastapi import HTTPException,Depends,Request # REQUEST EXCEPTION
 import logging
 from datetime import *
 logging.basicConfig(level=logging.DEBUG)
@@ -20,10 +20,10 @@ async def login_userAdmin(request_login):
     return {'access_token': token, 'token_type': 'bearer'}
 
 async def authenticate_userAdmin(user: str, password: str):
-    Usuario = usuario_admin.get_or_none(usuario_admin.usuario == user)
+    Usuario = usuario_admin.get_or_none(usuario_admin.usuario == user and usuario_admin.contraseña == password)
 
     if Usuario is None or not usuario_admin.contraseña == password:
-        raise HTTPException(status_code=404, detail='Admin not found or incorrect password')
+        raise HTTPException(status_code=404, detail='Usuario incorrecto')
 
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token_data = {

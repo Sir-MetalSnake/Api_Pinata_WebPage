@@ -59,8 +59,7 @@ app.add_middleware(CORSMiddleware,
                     allow_origins=["*"],
                     allow_credentials=True,
                     allow_methods=["*"],
-                    allow_headers=["*"],
-                    )
+                    allow_headers=["*"])
 
 oauth2_scheme_user = OAuth2PasswordBearer(tokenUrl="Loginprueba",scheme_name="oauth2_User")
 oauth2_scheme_Admin = OAuth2PasswordBearer(tokenUrl="LoginAdmin",scheme_name="oauth2_Admin")

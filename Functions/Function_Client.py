@@ -20,7 +20,7 @@ async def login_user(request_login):
 
 
 async def authenticate_user(user: str, password: str):
-    Usuario = usuario_cliente.get_or_none(usuario_cliente.usuario == user)
+    Usuario = usuario_cliente.get_or_none(usuario_cliente.usuario == user and usuario_cliente.contraseña == password)
 
     if Usuario is None or not usuario_cliente.contraseña == password:
         raise HTTPException(status_code=404, detail='Worker not found or incorrect password')
