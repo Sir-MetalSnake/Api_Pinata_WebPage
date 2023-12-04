@@ -3,7 +3,7 @@ from schemas.ProcesoDelPedido import *
 from fastapi import HTTPException # REQUEST EXCEPTION
 
 async def get_Proceso_Del_Pedido(ID):
-    ProcesoP = proceso_del_pedido.select().where(proceso_del_pedido.ID == ID).first()
+    ProcesoP = proceso_del_pedido.select().where(proceso_del_pedido.pedido_idpedido == ID).first()
     if ProcesoP:
         return ProcesoPedido1Response(ID=ProcesoP.ID,
                                       pedido_idpedido=ProcesoP.pedido_idpedido,
@@ -26,11 +26,11 @@ async def Create_Procedo_Del_Pedido(Req: ProcesoPedidoRequestModel):
         )
         return Req
 
-async def Modify_User(ID_Usuario, Pag_request: PagoFinalModify):
-    res = proceso_del_pedido.get_or_none(proceso_del_pedido.usuario_cliente_idusuarios == ID_Usuario)
+async def Modify_Anticipo_Final(ID, Pag_request: PagoFinalModify):
+    res = proceso_del_pedido.get_or_none(proceso_del_pedido.pedido_idpedido == ID)
     if res:
-        res.Telefono = usuario_request.Telefono
+        res.Pago_Final = Pag_request.Pago_Final
         res.save()
-        return {"message": f"El telefono a sido actualizado"}
+        return {"message": f"Pedido pagado"}
     else:
         raise HTTPException(404, 'Client not found')

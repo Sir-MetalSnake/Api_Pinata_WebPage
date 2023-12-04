@@ -9,7 +9,7 @@ logging.basicConfig(level=logging.DEBUG)
 #Class Client
 SECRET_KEY = "OPTIMISTAPRIME"
 ALGORITHM = "HS512"
-ACCESS_TOKEN_EXPIRE_MINUTES = 2
+ACCESS_TOKEN_EXPIRE_MINUTES = 5
 
 
 async def login_user(request_login):
@@ -25,7 +25,7 @@ async def authenticate_user(user: str, password: str):
     if Usuario is None or not usuario_cliente.contraseña == password:
         raise HTTPException(status_code=404, detail='Worker not found or incorrect password')
 
-    access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+    access_token_expires = timedelta(hours=ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token_data = {
         "sub": Usuario.usuario,
         "exp": datetime.utcnow() + access_token_expires,
@@ -41,6 +41,19 @@ async def get_current_user(token):
     except PyJWTError:
         raise HTTPException(status_code=401, detail="No autorizado")
     return user
+
+async def Verify_Token_User(token):
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        username: str = payload.get("sub")
+        User= usuario_cliente.get_or_none(usuario_cliente.usuario == username)
+        if User:
+            return {"message": f"El usuario es User"}
+        else:
+            raise HTTPException(401, "No es un Usuario")
+    except PyJWTError:
+        raise HTTPException(status_code=401, detail="Token expirado o invalido")
+
 
 async def create_user(user_req: UserClientRequestModel):
     res = usuario_cliente.select().where(usuario_cliente.usuario == user_req.usuario)
@@ -60,9 +73,16 @@ async def create_user(user_req: UserClientRequestModel):
 
 
 async def get_user(id_usuarios):
-    user = usuario_cliente.select().where(usuario_cliente.idusuarios == id_usuarios)
+    user = usuario_cliente.get_or_none(usuario_cliente.idusuarios == id_usuarios | usuario_cliente.usuario == id_usuarios)
     if user:
-        return True
+        return UserClientResponseModel(idusuarios=user.idusuarios,
+                                       usuario=user.usuario,
+                                       Correo=user.Correo,
+                                       contraseña=user.contraseña,
+                                       Nombre=user.Nombre,
+                                       Apellido_P=user.Apellido_P,
+                                       Apellido_M=user.Apellido_M,
+                                       Telefono=user.Telefono)
     else:
         return False
 

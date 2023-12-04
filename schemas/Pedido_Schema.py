@@ -11,5 +11,9 @@ class PedidoBaseModel(BaseModel):
     Contacto_idContacto: int
 
 
+class ModifyStatus(BaseModel):
+    Estatus: str
+
+
 class PedidoResponseModel(PedidoBaseModel):
     idpedido: int

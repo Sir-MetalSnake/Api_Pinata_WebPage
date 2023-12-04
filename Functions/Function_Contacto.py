@@ -8,7 +8,7 @@ async def get_Contact(id_Contact):
     if Ct:
         return ContactResponse(idContacto=Ct.idContacto,
                                 Direccion=Ct.Direccion,
-                               Telefono= Ct.Telefono)
+                               Telefono=Ct.Telefono)
     else:
         raise HTTPException(404,"El dato que desea buscar no existe")
 

@@ -18,6 +18,19 @@ async def Get_All_Color(id_pinata):
     else:
         raise HTTPException(404,'No tiene agregado un color de acuerdo a esa piñata')
 
+async def Get_All_Colors():
+    color = colors.select()
+    if color:
+        resul = []
+        for index in color:
+            Col = Colors_Response(Id_color=index.Id_color, Name=index.Name, Imagen=index.Imagen, Id_Piñatas=index.Id_Piñatas)
+            model = {'Id_color': Col.Id_color, 'Name': Col.Name, 'Imagen': Col.Imagen, 'Id_Piñatas': Col.Id_Piñatas}
+            resul.append(model)
+        json_resul = json.dumps({'Colores': resul})
+        data = json.loads(json_resul)
+        return data
+    else:
+        raise HTTPException(404,'No tiene agregado ningun color')
 
 async def Create_Color(Color_Req:Colors_Main_Model):
     Color_Req = colors.create(

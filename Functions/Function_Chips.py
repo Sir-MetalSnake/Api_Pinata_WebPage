@@ -19,6 +19,13 @@ async def Get_All_Tags():
     else:
         raise HTTPException(404,'No tiene agregado alguna etiqueta')
 
+async def Get_chip(id):
+    ch = chips.get_or_none(chips.Id_Chip == id)
+    if ch:
+        return Model_ChipResponse(Id_Chip=ch.Id_Chip,Detail=ch.Detail)
+    else:
+        raise HTTPException(404,'Etiqueta no encontrada')
+
 
 async def Create_Tag(TagReq:Model_Chip):
     res = chips.select().where(chips.Id_Chip == TagReq.Id_Chip)

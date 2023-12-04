@@ -10,7 +10,7 @@ logging.basicConfig(level=logging.DEBUG)
 #Class Admin
 SECRET_KEY = "OPTIMISTAPRIME"
 ALGORITHM = "HS512"
-ACCESS_TOKEN_EXPIRE_MINUTES = 2
+ACCESS_TOKEN_EXPIRE_MINUTES = 5
 
 #Auth User Admin
 async def login_userAdmin(request_login):
@@ -25,7 +25,7 @@ async def authenticate_userAdmin(user: str, password: str):
     if Usuario is None or not usuario_admin.contraseña == password:
         raise HTTPException(status_code=404, detail='Usuario incorrecto')
 
-    access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+    access_token_expires = timedelta(hours=ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token_data = {
         "sub": Usuario.usuario,
         "exp": datetime.utcnow() + access_token_expires,
@@ -42,6 +42,17 @@ async def get_current_userAdmin(token):
         raise HTTPException(status_code=401, detail="No autorizado")
     return user
 
+async def Verify_Token_Admin(token):
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        username: str = payload.get("sub")
+        User = usuario_admin.get_or_none(usuario_admin.usuario == username)
+        if User:
+            return {"message": f"El usuario es Admin"}
+        else:
+            raise HTTPException(401,"No es un Admin")
+    except PyJWTError:
+        raise HTTPException(status_code=401, detail="Token expirado o invalido")
 
 async def createadmin(useradmin_request: UserAdminRequestModel):
     useradmin_request = usuario_admin.create(
@@ -70,11 +81,14 @@ async def Modify_UserAdmin(id_usuario, admin_request: UserAdminRequestModel):
     else:
         raise HTTPException(404, 'Admin not found')
 
-async def Modify_Password_Admin(usuario, newPass: Modify_Admin_Password):
-    res = usuario_admin.get_or_none(usuario_admin.usuario == usuario)
-    if res:
-        res.contraseña=newPass.contraseña
-        res.save()
-        return {"message": f"La Contraseña a sido actualizada"}
-    else:
-        return HTTPException(404, 'Admin not found')
+async def Modify_Password_Admin(token, newPass: Modify_Admin_Password):
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        usuario: str = payload.get("sub")
+        res = usuario_admin.get_or_none(usuario_admin.usuario == usuario)
+        if res:
+            res.contraseña = newPass.contraseña
+            res.save()
+            return {"message": f"La Contraseña a sido actualizada"}
+    except PyJWTError:
+        raise HTTPException(status_code=401, detail="No autorizado")

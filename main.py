@@ -1,4 +1,7 @@
-from fastapi import FastAPI, HTTPException, Depends
+import uuid
+
+from fastapi import FastAPI, HTTPException, Depends, UploadFile,File
+from fastapi.responses import FileResponse
 from database import database as connection
 from fastapi.middleware.cors import CORSMiddleware
 #Security
@@ -63,8 +66,32 @@ app.add_middleware(CORSMiddleware,
 
 oauth2_scheme_user = OAuth2PasswordBearer(tokenUrl="Loginprueba",scheme_name="oauth2_User")
 oauth2_scheme_Admin = OAuth2PasswordBearer(tokenUrl="LoginAdmin",scheme_name="oauth2_Admin")
+ROUTE = 'img_pinatas/'
+@app.post("/uploadfile/")
+async def create_upload_file(file: UploadFile = File(...)):
+    try:
+        allowFile= {"image/jpeg", "image/jpg", "image/png", "image/gif"}
+        if file.content_type in allowFile:
+            file_extension = file.filename.split('.')[-1]
+            file.filename = f"{uuid.uuid4()}.{file_extension}"
+            contents = file.file.read()
+            with open(f"{ROUTE}{file.filename}", 'wb') as f:
+                f.write(contents)
+        else:
+            raise HTTPException(404, 'Tipo de archivo incorrecto')
+    except Exception:
+        raise HTTPException(404, 'Error al momento de subir el archivo')
+    finally:
+        file.file.close()
+    return {"message": f"{file.filename}"}
 
+@app.get("/show")
+async def read_file(rout):
+    path = f"{ROUTE}{rout}"
+    return FileResponse(path)
 #auth
+
+
 @app.post('/Loginprueba', tags=['Usuario'])
 async def login(request_login: OAuth2PasswordRequestForm = Depends()):
     return await Client.login_user(request_login)
@@ -72,6 +99,12 @@ async def login(request_login: OAuth2PasswordRequestForm = Depends()):
 @app.get('/user/me', tags=['Usuario'])
 async def get_current_user(token: str = Depends(oauth2_scheme_user)):
     return await Client.get_current_user(token)
+
+
+@app.get('/Check_Token_User', tags=['Usuario'])
+async def Check(token: str = Depends(oauth2_scheme_user)):
+    return await Client.Verify_Token_User(token)
+
 
 @app.post('/LoginAdmin', tags=['Admin'])#Logeo con el admin
 async def loginAdmin(request_login2: OAuth2PasswordRequestForm = Depends()):
@@ -83,6 +116,9 @@ async def get_current_user(token2: str = Depends(oauth2_scheme_Admin)):
     return await Admin.get_current_userAdmin(token2)
 
 
+@app.get('/Check_Token_Admin', tags=['Admin'])
+async  def Check(token: str = Depends(oauth2_scheme_Admin)):
+    return await Admin.Verify_Token_Admin(token)
 
 # Function
 
@@ -155,9 +191,9 @@ async def Modify_UserAdmin(id_usuario, admin_request: UserAdminRequestModel):
     return await Admin.Modify_UserAdmin(id_usuario, admin_request)
 
 
-@app.patch('/usuario_admin/{usuario}', tags=["Admin"])
-async def Modify_Password_Admin(usuario, newPass: Modify_Admin_Password):
-    return await Admin.Modify_Password_Admin(usuario, newPass)
+@app.patch('/usuario_admin/', tags=["Admin"])
+async def Modify_Password_Admin(newPass: Modify_Admin_Password, token: str = Depends(oauth2_scheme_Admin)):
+    return await Admin.Modify_Password_Admin(token, newPass)
 
 # type of pinata
 @app.post('/tipos_de_piñatas', tags=["type of pinata"])
@@ -170,7 +206,7 @@ async def get_typepinata(id_type):
     return await Typep.get_typepinata(id_type)
 
 
-@app.get('/tipos_de_piñatas', tags=["type of pinata"])
+@app.get('/Get_ALL_tipos_de_piñatas', tags=["type of pinata"])
 async def get_all_TypeP():
     return await Typep.get_alltypepinata()
 
@@ -221,8 +257,7 @@ async def Modify_Contacto(id_Contact, req: ContactEditBase):
 async def Delete_Contacto(id_Contact):
     return await Conct.Delete_Contacto(id_Contact)
 
-#piñata
-
+#regionpiñata
 
 @app.get('/piñata/{dato}', tags=["Piñata"])
 async def GetAll_PinataSearch(dato):
@@ -233,8 +268,11 @@ async def GetAll_PinataSearch(dato):
 async def GetAll_Pinata():
     return await Pinata.GetAll_Pinata()
 
+@app.get('/GetPinata/{id}',tags=["Piñata"])
+async def GetPinataWithID(id):
+    return await Pinata.GetPinataWithID(id)
 
-@app.patch('/piñata/{ID_Pinata}', tags=["Piñata"])
+@app.patch('/piñata', tags=["Piñata"])
 async def Modify_Piñata(ID_Pinata,Req:ModifyPinata):
     return await Pinata.Modify_Piñata(ID_Pinata,Req)
 
@@ -247,10 +285,9 @@ async def Create_Pinata(Req:PinataBASEMODEL):
 @app.delete('/piñata/{ID_Pinata}', tags=["Piñata"])
 async def Delete_Pinata(ID_Pinata):
     return await Pinata.Delete_Pinata(ID_Pinata)
+#endregion
 
 #Pinata Details
-
-
 @app.get('/piñatas_detalles/{ID_Pinata}', tags=["Piñata_detalles"])
 async def Get_PinataDetail(ID_Pinata):
     return await Detail.Get_Pinata_detail(ID_Pinata)
@@ -277,6 +314,11 @@ async def GetAll_Inventory():
     return await Invent.GetAllInventory()
 
 
+@app.get('/inventoryperdata/{data}', tags=["Inventario"])
+async def GetAllInventoryperData(data):
+    return await Invent.GetAllInventoryperData(data)
+
+
 @app.post('/inventario', tags=["Inventario"])
 async def Create_Invent(Req: InventaryBaseModel):
     return await Invent.CreateInvent(Req)
@@ -286,10 +328,15 @@ async def Create_Invent(Req: InventaryBaseModel):
 async def Delete_Inventory(ID_Inventory):
     return await Invent.Delete_Inventory(ID_Inventory)
 
+
 @app.patch('/inventario/{ID_Inventory}', tags=["Inventario"])
 async def Modify_Inventory(ID_Inventory,Req:InventaryDataModel):
     return await Invent.Modify_Inventory(ID_Inventory, Req)
 
+
+@app.patch('/discontinue',tags=["Inventario"])
+async def discontinue_Inventory(ID_Inv, Req:InventoryState):
+    return await Invent.discontinue_Inventory(ID_Inv, Req)
 
 # Pedido
 @app.post('/pedido', tags=["Pedido"])
@@ -303,6 +350,14 @@ async def get_Pedidos_user(ID_usuario):
 @app.get('/pedido', tags=["Pedido"])
 async def get_Pedidos():
     return await Pedid.get_Pedidos()
+
+@app.get('/GetAllPedidos_Fin', tags=['Pedido'])
+async def get_Pedidos_Finalizado():
+    return await Pedid.get_Pedidos_Finalizado()
+
+@app.patch('/Modify_Pedido', tags=['Pedido'])
+async def Modify_Status(id, req:ModifyStatus):
+    return await Pedid.Modify_Status(id, req)
 
 @app.delete('/pedido/{ID_Pedido}/{ID_usuario}', tags=["Pedido"])
 async def Delete_Pedido(ID_Pedido,ID_usuario):
@@ -318,6 +373,12 @@ async def Create_Procedo_Del_Pedido(Req: ProcesoPedidoRequestModel):
 async def get_Proceso_Del_Pedido(ID):
     return await procesoP.get_Proceso_Del_Pedido(ID)
 
+
+@app.patch('/Mod_proceso', tags=["Proceso_Del_Pedido"])
+async def Modify_Anticipo_Final(ID, req:PagoFinalModify):
+    return await procesoP.Modify_Anticipo_Final(ID, req)
+
+
 @app.get('/favoritos/{id_usuario}', tags=["favoritos"])
 async def GetFavoritos(Id_usuario):
     return await favoriteU.GetFavoritos(Id_usuario)
@@ -332,6 +393,10 @@ async def Delete_Favoritos(id_usuario,id_favorito):
 @app.get('/Get_All_Chips',tags=['Etiqueta'])
 async def Get_All_Tags():
     return await Tag.Get_All_Tags()
+
+@app.get('/Get_Tag',tags=['Etiqueta'])
+async def Get_chip(id):
+    return await Tag.Get_chip(id)
 
 @app.post('/Add_Tag',tags=['Etiqueta'])
 async def Create_Tag(TagReq:Model_Chip):
@@ -350,6 +415,9 @@ async def Modify_Tag(idTag, tag_req: Model_Chip):
 async def Get_All_Color(id_pinata):
     return await Col.Get_All_Color(id_pinata)
 
+@app.get('/Get_ALL_Colors',tags=['Colors'])
+async def Get_All_Colors():
+    return await Col.Get_All_Colors()
 
 @app.post('/Add_color_pinata', tags=['Colors'])
 async def Create_Color(Color_Req:Colors_Main_Model):

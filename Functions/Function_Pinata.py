@@ -39,7 +39,7 @@ async def GetAll_PinataSearch(dato):
                                  idFestividades=index.idFestividades,
                                  Precio=index.Precio,
                                  Imagen=index.Imagen,
-                                 d_Tag=index.Id_Tag)
+                                 Id_Tag=index.Id_Tag)
             model = {'idPiñatas': pinat.idPiñatas, 'Nombre_pinata': pinat.Nombre_pinata,
                      'idTipos_de_piñatas': pinat.idTipos_de_piñatas, 'idFestividades': pinat.idFestividades,
                      'Precio': pinat.Precio, 'Imagen': pinat.Imagen, 'Id_Tag': pinat.Id_Tag}
@@ -51,6 +51,20 @@ async def GetAll_PinataSearch(dato):
         raise HTTPException(404, "No tiene ningun campo agregado")
 
 
+async def GetPinataWithID(ID):
+    pin = piñata.get_or_none(piñata.idPiñatas == ID)
+    if pin:
+        return MyIDResponse(idPiñatas=pin.idPiñatas,
+                                 Nombre_pinata=pin.Nombre_pinata,
+                                 idTipos_de_piñatas=pin.idTipos_de_piñatas,
+                                 idFestividades=pin.idFestividades,
+                                 Precio=pin.Precio,
+                                 Imagen=pin.Imagen,
+                                 Id_Tag=pin.Id_Tag)
+    else:
+        raise HTTPException(404, 'Piñata no encontrada')
+
+
 async def Modify_Piñata(ID_Pinata, Req: ModifyPinata):
     xor = piñata.get_or_none(piñata.idPiñatas == ID_Pinata)
     if xor:
@@ -59,7 +73,7 @@ async def Modify_Piñata(ID_Pinata, Req: ModifyPinata):
         xor.idFestividades = Req.idFestividades if Req.idFestividades is not None else xor.idFestividades
         xor.Precio = Req.Precio if Req.Precio is not None else xor.Precio
         xor.Imagen = Req.Imagen if Req.Imagen is not None else xor.Imagen
-        xor.Id_Tag = Req.Id_Tag if Req.Id_Tag is not None else xor.Id_Tag
+        xor.Id_Tag = Req.Id_Tag if Req.Id_Tag is not 0 else xor.Id_Tag
         xor.save()
         return {"message": f"El dato ya fue modificado con exito"}
     else:
