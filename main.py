@@ -1,3 +1,4 @@
+import os.path
 import uuid
 
 from fastapi import FastAPI, HTTPException, Depends, UploadFile,File
@@ -89,6 +90,15 @@ async def create_upload_file(file: UploadFile = File(...)):
 async def read_file(rout):
     path = f"{ROUTE}{rout}"
     return FileResponse(path)
+
+@app.delete("/delete_file")
+async def delete(rout):
+    path = f"{ROUTE}{rout}"
+    if os.path.exists(path):
+        os.remove(path)
+        return {"Message": f"Imagen eliminada con éxito"}
+    else:
+        raise HTTPException(404,'File not found')
 #auth
 
 

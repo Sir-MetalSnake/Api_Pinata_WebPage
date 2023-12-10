@@ -24,7 +24,7 @@ async def CreateInvent(Req: InventaryBaseModel):
 
 
 async def GetAllInventory():
-    inv = inventario.select()  # aplico un select para obtener toda la informacion
+    inv = inventario.select().order_by(inventario.disponibilidad.desc())  # aplico un select para obtener toda la informacion
     if inv:
         resul = []
         for index in inv:

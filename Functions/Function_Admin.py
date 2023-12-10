@@ -20,7 +20,7 @@ async def login_userAdmin(request_login):
     return {'access_token': token, 'token_type': 'bearer'}
 
 async def authenticate_userAdmin(user: str, password: str):
-    Usuario = usuario_admin.get_or_none(usuario_admin.usuario == user and usuario_admin.contraseña == password)
+    Usuario = usuario_admin.get_or_none(usuario_admin.usuario == user or usuario_admin.contraseña == password)
 
     if Usuario is None or not usuario_admin.contraseña == password:
         raise HTTPException(status_code=404, detail='Usuario incorrecto')

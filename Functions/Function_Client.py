@@ -1,4 +1,5 @@
 from MyTables.usuario_cliente import usuario_cliente
+from MyTables.usuario_admin import usuario_admin
 from schemas.usuarioclient import *
 import jwt
 from jwt import PyJWTError
@@ -13,15 +14,27 @@ ACCESS_TOKEN_EXPIRE_MINUTES = 5
 
 
 async def login_user(request_login):
-    user = request_login.username
-    password = request_login.password
-    token = await authenticate_user(user, password)
-    return {'access_token': token, 'token_type': 'bearer'}
+    usuario = usuario_cliente.select().where(usuario_cliente.usuario == request_login.username
+                                             or usuario_cliente.contraseña == request_login.password).first()
+
+    if usuario:
+        admin = usuario_admin.select().where(usuario_admin.usuario == usuario.usuario).first()
+
+        if admin:
+            raise HTTPException(403, 'Acceso no autorizado para administradores')
+        else:
+            user = request_login.username
+            password = request_login.password
+            token = await authenticate_user(user, password)
+            return {'access_token': token, 'token_type': 'bearer'}
+    else:
+        raise HTTPException(404, 'Usuario no encontrado o credenciales incorrectas')
+
+
 
 
 async def authenticate_user(user: str, password: str):
     Usuario = usuario_cliente.get_or_none(usuario_cliente.usuario == user and usuario_cliente.contraseña == password)
-
     if Usuario is None or not usuario_cliente.contraseña == password:
         raise HTTPException(status_code=404, detail='Worker not found or incorrect password')
 
@@ -33,6 +46,7 @@ async def authenticate_user(user: str, password: str):
     access_token = jwt.encode(access_token_data, SECRET_KEY, algorithm=ALGORITHM)
 
     return access_token
+
 async def get_current_user(token):
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
@@ -62,8 +76,8 @@ async def create_user(user_req: UserClientRequestModel):
     else:
         user_req = usuario_cliente.create(
             usuario=user_req.usuario,
-            contraseña=user_req.contraseña,
             Correo=user_req.Correo,
+            contraseña=user_req.contraseña,
             Nombre=user_req.Nombre,
             Apellido_P=user_req.Apellido_P,
             Apellido_M=user_req.Apellido_M,
@@ -120,8 +134,9 @@ async def Modify_User(id_usuario, usuario_request: UserClientRequestModel):
         return HTTPException(404, 'Client not found')
 
 
-async def Modify_Password(usuario, usuario_req: UserClient_Modify_Pass):
-    res = usuario_cliente.get_or_none(usuario_cliente.usuario == usuario)
+async def Modify_Password(usuarioorCorreo, usuario_req: UserClient_Modify_Pass):
+    res = usuario_cliente.get_or_none(usuario_cliente.usuario == usuarioorCorreo |
+                                      usuario_cliente.Correo == usuarioorCorreo)
     if res:
         res.contraseña = usuario_req.contraseña
         res.save()

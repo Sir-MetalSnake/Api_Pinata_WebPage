@@ -9,8 +9,8 @@ async def Get_All_Color(id_pinata):
     if color:
         resul = []
         for index in color:
-            Col = Colors_Response(Id_color=index.Id_color, Name=index.Name, Imagen=index.Imagen, Id_Piñatas=index.Id_Piñatas)
-            model = {'Id_color': Col.Id_color, 'Name': Col.Name, 'Imagen': Col.Imagen, 'Id_Piñatas': Col.Id_Piñatas}
+            Col = Colors_Response(Id_color=index.Id_color,Name=index.Name, Imagen=index.Imagen, Id_Piñatas=index.Id_Piñatas)
+            model = {'Id_color':Col.Id_color,'Name': Col.Name, 'Imagen': Col.Imagen, 'Id_Piñatas': Col.Id_Piñatas}
             resul.append(model)
         json_resul = json.dumps({'Colores': resul})
         data = json.loads(json_resul)

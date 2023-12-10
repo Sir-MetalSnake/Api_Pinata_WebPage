@@ -1,7 +1,7 @@
 from database import *
 from MyTables.piñata import piñata
 class colors(Model):
-    id_color = IntegerField(primary_key=True)
+    Id_color = IntegerField(primary_key=True)
     Name = CharField(50)
     Imagen = CharField(50)
     Id_Piñatas = IntegerField(ForeignKeyField(piñata, field="idPiñatas", column_name="Id_Piñatas"))

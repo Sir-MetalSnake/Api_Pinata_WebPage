@@ -28,8 +28,13 @@ async def GetAll_Pinata():
 
 
 async def GetAll_PinataSearch(dato):
-    pin = piñata.select().where(
-        piñata.Nombre_pinata.contains(dato))  # aplico un select para obtener toda la informacion
+    pin = (piñata.select()
+           .join(tipos_de_piñatas, on=(piñata.idTipos_de_piñatas == tipos_de_piñatas.idTipos_de_piñatas))
+           .join(festividades, on=(piñata.idFestividades == festividades.idFestividades))
+           .join(chips, on=(piñata.Id_Tag == chips.Id_Chip))
+           .where((piñata.Nombre_pinata.contains(dato)) | (tipos_de_piñatas.Tipo.contains(dato))
+                  | (festividades.Nombre_festividad.contains(dato)) | (chips.Detail.contains(dato))))
+
     if pin:
         resul = []
         for index in pin:

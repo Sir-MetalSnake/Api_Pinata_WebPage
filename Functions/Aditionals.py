@@ -34,7 +34,7 @@ class Sender:
 
 
 async def Send_Mail_Code_Verify(user):
-    cli = usuario_cliente.get_or_none(usuario_cliente.usuario == user)
+    cli = usuario_cliente.get_or_none(usuario_cliente.usuario == user | usuario_cliente.Correo == user)
     sender = Sender("ansirkhziur@gmail.com", "diyv behc uqqm tydq")  # en esta parte llamamos a la clase Sender
     # Se crea de forma automatica el codigo para conectarse
     p1 = ''.join(random.choice(char) for i in range(3))
