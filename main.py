@@ -369,6 +369,14 @@ async def Create_Pedido(Req:PedidoBaseModel):
 async def get_Pedidos_user(ID_usuario):
     return await Pedid.get_Pedidos_user(ID_usuario)
 
+@app.get('/pedido_user_fin/{ID_usuario}', tags=["Pedido"])
+async def get_Pedidos_user_finalizado(ID_usuario):
+    return await Pedid.get_Pedidos_user_finalizado(ID_usuario)
+
+@app.get('/pedido_user_Notf/{ID_usuario}', tags=["Pedido"])
+async def get_Pedidos_user_notify(ID_usuario):
+    return await Pedid.get_Pedidos_user_notify(ID_usuario)
+
 @app.get('/getallpedido', tags=["Pedido"])
 async def get_Pedidos_ALL():
     return await Pedid.get_Pedidos_ALL()
