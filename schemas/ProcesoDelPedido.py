@@ -3,7 +3,6 @@ from typing import Optional
 
 
 class ProcesoPedidoRequestModel(BaseModel):
-    ID: int
     pedido_idpedido: int
     Anticipo: str
     Pago_Final: Optional[str] = None

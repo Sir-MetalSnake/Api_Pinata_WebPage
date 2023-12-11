@@ -268,6 +268,13 @@ async def Delete_Contacto(id_Contact):
     return await Conct.Delete_Contacto(id_Contact)
 
 #regionpiñata
+@app.get('/piñata_PerOrder/{Orden}', tags=["Piñata"])
+async def GetAll_InOrder(Orden):
+    return await Pinata.GetAll_InOrder(Orden)
+
+@app.get('/piñata_PerPrice/{Price}', tags=["Piñata"])
+async def GetAll_InMinNumber(Price):
+    return await Pinata.GetAll_InMinNumber(Price)
 
 @app.get('/piñata/{dato}', tags=["Piñata"])
 async def GetAll_PinataSearch(dato):
@@ -324,6 +331,11 @@ async def GetAll_Inventory():
     return await Invent.GetAllInventory()
 
 
+@app.get('/Check_inventario', tags=["Inventario"])
+async def CheckInventory(idPinata):
+    return await Invent.CheckInventory(idPinata)
+
+
 @app.get('/inventoryperdata/{data}', tags=["Inventario"])
 async def GetAllInventoryperData(data):
     return await Invent.GetAllInventoryperData(data)
@@ -353,9 +365,13 @@ async def discontinue_Inventory(ID_Inv, Req:InventoryState):
 async def Create_Pedido(Req:PedidoBaseModel):
     return await Pedid.Create_Pedido(Req)
 
-@app.get('/pedido/{ID_Pedido}', tags=["Pedido"])
+@app.get('/pedido/{ID_usuario}', tags=["Pedido"])
 async def get_Pedidos_user(ID_usuario):
     return await Pedid.get_Pedidos_user(ID_usuario)
+
+@app.get('/getallpedido', tags=["Pedido"])
+async def get_Pedidos_ALL():
+    return await Pedid.get_Pedidos_ALL()
 
 @app.get('/pedido', tags=["Pedido"])
 async def get_Pedidos():
@@ -389,7 +405,7 @@ async def Modify_Anticipo_Final(ID, req:PagoFinalModify):
     return await procesoP.Modify_Anticipo_Final(ID, req)
 
 
-@app.get('/favoritos/{id_usuario}', tags=["favoritos"])
+@app.get('/favoritos/{Id_usuario}', tags=["favoritos"])
 async def GetFavoritos(Id_usuario):
     return await favoriteU.GetFavoritos(Id_usuario)
 @app.post('/favoritos', tags=["favoritos"])

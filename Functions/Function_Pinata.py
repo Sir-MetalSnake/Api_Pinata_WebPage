@@ -27,6 +27,55 @@ async def GetAll_Pinata():
         raise HTTPException(404, "No tiene ningun campo agregado")
 
 
+async def GetAll_InOrder(Order):
+    if Order == 'ASC':
+        pin = piñata.select().order_by(piñata.Precio.asc())
+    else:
+        pin = piñata.select().order_by(piñata.Precio.desc())
+
+    if pin:
+        resul = []
+        for index in pin:
+            pinat = MyIDResponse(idPiñatas=index.idPiñatas,
+                                 Nombre_pinata=index.Nombre_pinata,
+                                 idTipos_de_piñatas=index.idTipos_de_piñatas,
+                                 idFestividades=index.idFestividades,
+                                 Precio=index.Precio,
+                                 Imagen=index.Imagen,
+                                 Id_Tag=index.Id_Tag)
+            model = {'idPiñatas': pinat.idPiñatas, 'Nombre_pinata': pinat.Nombre_pinata,
+                     'idTipos_de_piñatas': pinat.idTipos_de_piñatas, 'idFestividades': pinat.idFestividades,
+                     'Precio': pinat.Precio, 'Imagen': pinat.Imagen, 'Id_Tag': pinat.Id_Tag}
+            resul.append(model)
+        json_resul = json.dumps({'piñata': resul})
+        data = json.loads(json_resul)
+        return data
+    else:
+        raise HTTPException(404, "No tiene ningun campo agregado")
+
+
+async def GetAll_InMinNumber(Price):
+    pin = piñata.select().where((piñata.Precio < Price) | (piñata.Precio > Price))
+    if pin:
+        resul = []
+        for index in pin:
+            pinat = MyIDResponse(idPiñatas=index.idPiñatas,
+                                 Nombre_pinata=index.Nombre_pinata,
+                                 idTipos_de_piñatas=index.idTipos_de_piñatas,
+                                 idFestividades=index.idFestividades,
+                                 Precio=index.Precio,
+                                 Imagen=index.Imagen,
+                                 Id_Tag=index.Id_Tag)
+            model = {'idPiñatas': pinat.idPiñatas, 'Nombre_pinata': pinat.Nombre_pinata,
+                     'idTipos_de_piñatas': pinat.idTipos_de_piñatas, 'idFestividades': pinat.idFestividades,
+                     'Precio': pinat.Precio, 'Imagen': pinat.Imagen, 'Id_Tag': pinat.Id_Tag}
+            resul.append(model)
+        json_resul = json.dumps({'piñata': resul})
+        data = json.loads(json_resul)
+        return data
+    else:
+        raise HTTPException(404, "No tiene ningun campo agregado")
+
 async def GetAll_PinataSearch(dato):
     pin = (piñata.select()
            .join(tipos_de_piñatas, on=(piñata.idTipos_de_piñatas == tipos_de_piñatas.idTipos_de_piñatas))

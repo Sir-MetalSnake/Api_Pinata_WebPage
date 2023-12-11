@@ -5,7 +5,7 @@ from schemas.Favorite import *
 from fastapi import HTTPException
 
 async def CreateFavoritos(Req: FavoriteBaseModel):
-    res=favoritos.select().where(favoritos.id_piñata == Req.id_piñata)
+    res = favoritos.select().where((favoritos.id_piñata == Req.id_piñata) & (favoritos.id_user == Req.id_user))
     if res:
         raise HTTPException(404, 'Ya tiene dentro de favoritos ese producto')
     else:

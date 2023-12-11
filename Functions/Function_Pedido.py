@@ -83,6 +83,11 @@ async def get_Pedidos_Finalizado():#Muestra todos los pedidos
     else:
         raise HTTPException(404, "No tiene ningun campo agregado")
 
+async def get_Pedidos_ALL():#Muestra todos los pedidos
+    pin = pedido.select().count()  # aplico un select para obtener toda la informacion
+    return pin
+
+
 async def Create_Pedido(Req:PedidoBaseModel):
     res = pedido.select().where(pedido.idpedido == Req.idpedido)
     if res:

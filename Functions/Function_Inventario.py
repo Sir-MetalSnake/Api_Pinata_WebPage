@@ -22,6 +22,14 @@ async def CreateInvent(Req: InventaryBaseModel):
         )
         return Req
 
+async def CheckInventory(idPinata):
+    inv = inventario.select().where((inventario.id_Piñatas_inv == idPinata) &
+                                    (inventario.disponibilidad == 1)).first()
+    if inv:
+        return True
+    else:
+        return False
+
 
 async def GetAllInventory():
     inv = inventario.select().order_by(inventario.disponibilidad.desc())  # aplico un select para obtener toda la informacion

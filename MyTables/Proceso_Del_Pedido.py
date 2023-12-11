@@ -7,7 +7,7 @@ class proceso_del_pedido(Model):
     Pago_Final = CharField(max_length=45)
 
     def __int__(self):
-        return self.ID
+        return self.pedido_idpedido
 
     class Meta:
         database = database

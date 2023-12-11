@@ -19,7 +19,6 @@ async def Create_Procedo_Del_Pedido(Req: ProcesoPedidoRequestModel):
         raise HTTPException(404,  'Ya hay un objeto con esa clave')
     else:
         Req = proceso_del_pedido.create(
-            ID=Req.ID,
             pedido_idpedido=Req.pedido_idpedido,
             Anticipo = Req.Anticipo,
             Pago_Final = Req.Pago_Final
