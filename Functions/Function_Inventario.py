@@ -30,6 +30,20 @@ async def CheckInventory(idPinata):
     else:
         return False
 
+async def GetInventarioPerIdPinata(idPinata):
+    inv = inventario.select().where(inventario.id_Piñatas_inv == idPinata).first()
+
+    if inv:
+        return InventaryResponseModel(idInventario=inv.idInventario,
+                                        disponibilidad=inv.disponibilidad,
+                                        Existencia=inv.Existencia,
+                                        Vendido=inv.Vendido,
+                                        Apartado=inv.Apartado,
+                                        Total=inv.Total,
+                                        id_Piñatas_inv=inv.id_Piñatas_inv)
+
+    else:
+        raise HTTPException(404, "No tiene ningun campo agregado")
 
 async def GetAllInventory():
     inv = inventario.select().order_by(inventario.disponibilidad.desc())  # aplico un select para obtener toda la informacion
@@ -108,6 +122,6 @@ async def Modify_Inventory(ID_Inventory,Req:InventaryDataModel):
         Val = int(xor.Existencia)-int(Req.Vendido)-int(Req.Apartado)
         xor.Total = Val
         xor.save()
-        return {"message": f"El dato ya fue modificado con exito"}
+        return xor
     else:
         raise HTTPException(404,"El objeto que anda buscando no existe")

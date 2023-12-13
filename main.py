@@ -335,6 +335,9 @@ async def GetAll_Inventory():
 async def CheckInventory(idPinata):
     return await Invent.CheckInventory(idPinata)
 
+@app.get('/Get_Inventory_pinata',tags=['Inventario'])
+async def GetInventarioPerIdPinata(idpinata):
+    return await Invent.GetInventarioPerIdPinata(idpinata)
 
 @app.get('/inventoryperdata/{data}', tags=["Inventario"])
 async def GetAllInventoryperData(data):
@@ -377,9 +380,18 @@ async def get_Pedidos_user_finalizado(ID_usuario):
 async def get_Pedidos_user_notify(ID_usuario):
     return await Pedid.get_Pedidos_user_notify(ID_usuario)
 
+
+@app.get('/GetPedidos_user_Cancel/{ID_usuario}',tags=['Pedido'])
+async def get_Pedidos_user_cancel(ID_usuario):
+    return await Pedid.get_Pedidos_user_cancel(ID_usuario)
+
 @app.get('/getallpedido', tags=["Pedido"])
 async def get_Pedidos_ALL():
     return await Pedid.get_Pedidos_ALL()
+
+@app.get('/getallpedido_cancelados', tags=["Pedido"])
+async def get_Pedidos_Cancelados():
+    return await Pedid.get_Pedidos_Cancelados()
 
 @app.get('/pedido', tags=["Pedido"])
 async def get_Pedidos():
